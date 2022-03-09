@@ -24,7 +24,7 @@ class TypeInfoWrapper(typing.NamedTuple):
     base_classes: typing.List[mypy.nodes.TypeInfo]
 
 
-def mk_typeinfo_wrapper(symbol_table: mypy.nodes.SymbolTable) -> TypeInfoWrapper:
+def mk_typeinfo_wrapper() -> TypeInfoWrapper:
     defn = mypy.nodes.ClassDef(
         name="ProtocolIntersection",
         defs=mypy.nodes.Block([]),
@@ -32,7 +32,7 @@ def mk_typeinfo_wrapper(symbol_table: mypy.nodes.SymbolTable) -> TypeInfoWrapper
         type_vars=[],
     )
     defn.fullname = "ProtocolIntersection"
-    type_info = mypy.nodes.TypeInfo(names=symbol_table, defn=defn, module_name="intersection")
+    type_info = mypy.nodes.TypeInfo(names=mypy.nodes.SymbolTable(), defn=defn, module_name="intersection")
     type_info.mro = [type_info]
     return TypeInfoWrapper(type_info, [])
 
@@ -79,15 +79,15 @@ def is_intersection(typ: mypy.types.Type) -> bool:
     )
 
 
-def fold_intersection(t: mypy.types.Type, symbol_table: mypy.nodes.SymbolTable) -> mypy.types.Type:
-    type_info_wrapper = _fold_intersection(t, mk_typeinfo_wrapper(symbol_table))
+def fold_intersection(t: mypy.types.Type) -> mypy.types.Type:
+    type_info_wrapper = _fold_intersection(t, mk_typeinfo_wrapper())
     args = [mypy.types.Instance(ti, []) for ti in type_info_wrapper.base_classes]
     return mypy.types.Instance(type_info_wrapper.type_info, args=args)
 
 
 def intersection_method_hook(context: typing.Union[MethodContext, FunctionContext]) -> mypy.types.Type:
     if is_intersection(context.default_return_type):
-        return fold_intersection(context.default_return_type, context.api.globals)
+        return fold_intersection(context.default_return_type)
     return context.default_return_type
 
 
