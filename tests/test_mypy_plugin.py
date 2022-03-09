@@ -1,4 +1,4 @@
-from collections import namedtuple
+import typing
 from pathlib import Path
 
 import mypy.api
@@ -6,7 +6,11 @@ import pytest
 
 HERE = Path(__file__).parent
 
-_TestCase = namedtuple("TestCase", ["path", "expected_stdout", "expected_stderr"])
+
+class _TestCase(typing.NamedTuple):
+    path: Path
+    expected_stdout: str
+    expected_stderr: str
 
 
 def get_expected_stdout(contents: str) -> str:
@@ -40,7 +44,7 @@ def testcase_file(request):
     path = request.param
     with open(HERE / path) as f:
         contents = f.read()
-    return _TestCase(str(HERE / path), get_expected_stdout(contents), get_expected_stderr(contents))
+    return _TestCase(HERE / path, get_expected_stdout(contents), get_expected_stderr(contents))
 
 
 @pytest.mark.parametrize(
@@ -55,6 +59,5 @@ def testcase_file(request):
     indirect=["testcase_file"],
 )
 def test_mypy_plugin(testcase_file: _TestCase):
-    print(testcase_file)
-    stdout, stderr, _ = mypy.api.run([testcase_file.path, "--config-file", str(HERE / "test-mypy.ini")])
+    stdout, stderr, _ = mypy.api.run([str(testcase_file.path), "--config-file", str(HERE / "test-mypy.ini")])
     assert (stdout.strip(), stderr.strip()) == (testcase_file.expected_stdout, testcase_file.expected_stderr)
