@@ -55,6 +55,10 @@ def testcase_file(request):
             "testcases/in_generic_param_unhappy_path.py",
             id="generic param - unhappy path",
         ),
+        pytest.param(
+            "testcases/fails_for_non_protocol_calls.py",
+            id="fails when calling a function whose return has a non-Protocol base class",
+        ),
     ],
     indirect=["testcase_file"],
 )
