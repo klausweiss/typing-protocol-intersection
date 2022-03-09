@@ -21,12 +21,12 @@ class CustomPlugin(Plugin):
 
 def mk_typeinfo(symbol_table: mypy.nodes.SymbolTable) -> mypy.nodes.TypeInfo:
     defn = mypy.nodes.ClassDef(
-        name="Intersection",
+        name="ProtocolIntersection",
         defs=mypy.nodes.Block([]),
         base_type_exprs=[mypy.nodes.NameExpr("typing.Protocol")],
         type_vars=[],
     )
-    defn.fullname = "Intersection"
+    defn.fullname = "ProtocolIntersection"
     type_info = mypy.nodes.TypeInfo(names=symbol_table, defn=defn, module_name="intersection")
     type_info.mro = [type_info]
     return type_info

@@ -46,7 +46,7 @@ def main() -> None:
 
 
 # expected stdout
-# tests/testcases/in_generic_param_unhappy_path.py:44: error: Incompatible types in assignment (expression has type "Intersection[HasX]", variable has type "DesiredObject")
-# tests/testcases/in_generic_param_unhappy_path.py:44: note: "Intersection" is missing following "DesiredObject" protocol member:
+# tests/testcases/in_generic_param_unhappy_path.py:44: error: Incompatible types in assignment (expression has type "ProtocolIntersection[HasX]", variable has type "DesiredObject")
+# tests/testcases/in_generic_param_unhappy_path.py:44: note: "ProtocolIntersection" is missing following "DesiredObject" protocol member:
 # tests/testcases/in_generic_param_unhappy_path.py:44: note:     y
 # Found 1 error in 1 file (checked 1 source file)
