@@ -52,6 +52,7 @@ def testcase_file(request):
     [
         # region happy paths
         pytest.param("testcases/in_generic_param_happy_path.py", id="generic param - happy path"),
+        pytest.param("testcases/in_generic_param_happy_path_covariant.py", id="generic param, covariant - happy path"),
         pytest.param("testcases/function_return_type_happy_path.py", id="function return type - happy path"),
         # endregion
         # region unhappy paths

@@ -1,4 +1,3 @@
-from types import SimpleNamespace
 from typing import Dict, Generic, Protocol, TypeVar
 
 from typing_protocol_intersection import ProtocolIntersection
@@ -12,7 +11,7 @@ class HasY(Protocol):
     y: str
 
 
-T = TypeVar("T")
+T = TypeVar("T", covariant=True)
 
 
 class Builder(Generic[T]):
@@ -32,17 +31,18 @@ class Builder(Generic[T]):
         return SimpleNamespace(**self._d)  # type: ignore
 
 
-class DesiredObject(HasX, HasY, Protocol):
+class DesiredObject(HasY, HasX, Protocol):
     pass
 
 
-def get_x_y(o: DesiredObject) -> None:
+def get_x_y(b: Builder[DesiredObject]) -> None:
+    o = b.build()
     print(f"{o.x=}; {o.y=}")
 
 
 def main() -> None:
-    valid_o: DesiredObject = Builder().with_x().with_y().build()
-    get_x_y(valid_o)
+    builder = Builder().with_x().with_y()
+    get_x_y(builder)
 
 
 # expected stdout
