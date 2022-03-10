@@ -20,7 +20,7 @@ def get_expected_stdout(contents: str) -> str:
         if line.strip().startswith("#") and "expected stdout" in line:
             break
     for line in lines:
-        if line.strip().startswith("#") and "expected" in line:
+        if line.strip().startswith("#") and "expected stderr" in line:
             break
         stdout_lines.append(line.removeprefix("# "))
     return "\n".join(stdout_lines)
@@ -33,7 +33,7 @@ def get_expected_stderr(contents: str) -> str:
         if line.strip().startswith("#") and "expected stderr" in line:
             break
     for line in lines:
-        if line.strip().startswith("#") and "expected" in line:
+        if line.strip().startswith("#") and "expected stdout" in line:
             break
         stderr_lines.append(line.removeprefix("# "))
     return "\n".join(stderr_lines)
@@ -50,7 +50,11 @@ def testcase_file(request):
 @pytest.mark.parametrize(
     "testcase_file",
     [
+        # region happy paths
         pytest.param("testcases/in_generic_param_happy_path.py", id="generic param - happy path"),
+        pytest.param("testcases/function_return_type_happy_path.py", id="function return type - happy path"),
+        # endregion
+        # region unhappy paths
         pytest.param(
             "testcases/in_generic_param_unhappy_path.py",
             id="generic param - unhappy path",
@@ -59,6 +63,8 @@ def testcase_file(request):
             "testcases/fails_for_non_protocol_calls.py",
             id="fails when calling a function whose return has a non-Protocol base class",
         ),
+        pytest.param("testcases/function_return_type_unhappy_path.py", id="function return type - unhappy path"),
+        # endregion
     ],
     indirect=["testcase_file"],
 )
