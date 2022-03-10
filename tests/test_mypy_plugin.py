@@ -54,6 +54,7 @@ def testcase_file(request):
         pytest.param("testcases/in_generic_param_happy_path.py", id="generic param - happy path"),
         pytest.param("testcases/in_generic_param_happy_path_covariant.py", id="generic param, covariant - happy path"),
         pytest.param("testcases/function_return_type_happy_path.py", id="function return type - happy path"),
+        pytest.param("testcases/multiple_params_happy_path.py", id="accepts multiple type parameters - happy path"),
         # endregion
         # region unhappy paths
         pytest.param(
@@ -61,14 +62,17 @@ def testcase_file(request):
             id="generic param - unhappy path",
         ),
         pytest.param(
-            "testcases/fails_for_non_protocol_calls.py",
-            id="fails when calling a function whose return has a non-Protocol base class",
+            "testcases/fails_for_non_protocols.py",
+            id="fails when defining a function/method whose return has a non-Protocol base class",
         ),
         pytest.param("testcases/function_return_type_unhappy_path.py", id="function return type - unhappy path"),
+        pytest.param("testcases/multiple_params_unhappy_path.py", id="accepts multiple type parameters - unhappy path"),
         # endregion
     ],
     indirect=["testcase_file"],
 )
 def test_mypy_plugin(testcase_file: _TestCase):
-    stdout, stderr, _ = mypy.api.run([str(testcase_file.path), "--config-file", str(HERE / "test-mypy.ini")])
+    stdout, stderr, _ = mypy.api.run(
+        [str(testcase_file.path), "--config-file", str(HERE / "test-mypy.ini"), "--no-incremental"]
+    )
     assert (stdout.strip(), stderr.strip()) == (testcase_file.expected_stdout, testcase_file.expected_stderr)

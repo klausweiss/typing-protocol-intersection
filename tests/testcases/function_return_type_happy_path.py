@@ -12,7 +12,7 @@ class HasY(Protocol):
     y: str
 
 
-def get_o() -> ProtocolIntersection[ProtocolIntersection[None, HasX], HasY]:
+def get_o() -> ProtocolIntersection[HasX, HasY]:
     return SimpleNamespace(x="x", y="y")  # type: ignore
 
 
