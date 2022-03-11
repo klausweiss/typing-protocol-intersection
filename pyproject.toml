@@ -29,3 +29,35 @@ warn_no_return = true
 warn_redundant_casts = true
 warn_return_any = true
 warn_unused_configs = true
+
+[tool.tox]
+legacy_tox_ini = """
+[tox]
+envlist = py{36,37,38,39,310}-mypy{,0930}-pytest
+isolated_build = true
+
+[testenv]
+deps =
+    {[testenv:mypy]deps}
+    {[testenv:pytest]deps}
+commands =
+    mypy typing_protocol_intersection
+    pytest
+
+[testenv:pytest]
+deps =
+    pytest
+
+[testenv:mypy{,0930}]
+deps =
+    mypy: mypy
+    mypy0930: mypy == 0.930  # lowest supported mypy version
+
+[gh-actions]
+python =
+    3.6: py36
+    3.7: py37
+    3.8: py38
+    3.9: py39
+    3.10: py310
+"""
