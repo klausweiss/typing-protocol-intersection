@@ -35,22 +35,45 @@ class TypeInfoWrapper(typing.NamedTuple):
     base_classes: typing.List[mypy.nodes.TypeInfo]
 
 
-def mk_protocol_typeinfo(
-    name: str, *, fullname: Optional[str] = None, symbol_table: Optional[mypy.nodes.SymbolTable] = None
+class IncomparableTypeName(str):
+    """A string that never returns True when compared (equality) with another instance of this type."""
+
+    def __eq__(self, x: object) -> bool:
+        if isinstance(x, IncomparableTypeName):
+            return False
+        return super().__eq__(x)
+
+    def __hash__(self) -> int:
+        return super().__hash__()
+
+
+def mk_protocol_intersection_typeinfo(
+    name: str,
+    *,
+    # For ProtocolIntersections to not be treated as the same type, but just as protocols,
+    # their fullnames need to differ - that's it's an IncomparableTypeName.
+    fullname: IncomparableTypeName,
+    symbol_table: Optional[mypy.nodes.SymbolTable] = None,
 ) -> mypy.nodes.TypeInfo:
     defn = mypy.nodes.ClassDef(
         name=name,
         defs=mypy.nodes.Block([]),
-        base_type_exprs=[mypy.nodes.NameExpr("typing.Protocol")],
+        base_type_exprs=[
+            mypy.nodes.NameExpr("typing.Protocol"),
+            # mypy expects object to be here at the last index ('we skip "object" since everyone implements it')
+            mypy.nodes.NameExpr("builtins.object"),
+        ],
         type_vars=[],
     )
-    defn.fullname = name if fullname is None else fullname
+    defn.fullname = IncomparableTypeName(fullname)
+    defn.info.is_protocol = True
     type_info = mypy.nodes.TypeInfo(
         names=symbol_table if symbol_table is not None else mypy.nodes.SymbolTable(),
         defn=defn,
         module_name="typing_protocol_intersection",
     )
     type_info.mro = [type_info]
+    type_info.is_protocol = True
     return type_info
 
 
@@ -67,8 +90,9 @@ class ProtocolIntersectionResolver:
     def fold_intersection(self, type_: mypy.types.Type) -> mypy.types.Type:
         if not self._is_intersection(type_):
             return type_
-        type_info = mk_protocol_typeinfo(
-            "ProtocolIntersection", fullname="typing_protocol_intersection.types.ProtocolIntersection"
+        type_info = mk_protocol_intersection_typeinfo(
+            "ProtocolIntersection",
+            fullname=IncomparableTypeName("typing_protocol_intersection.types.ProtocolIntersection"),
         )
         type_info_wrapper = self._run_fold(type_, TypeInfoWrapper(type_info, []))
         args = [mypy.types.Instance(ti, []) for ti in type_info_wrapper.base_classes]
@@ -95,15 +119,14 @@ class ProtocolIntersectionResolver:
     def _add_type_to_intersection(intersection_type_info_wrapper: TypeInfoWrapper, typ: mypy.types.Instance) -> None:
         name_expr = mypy.nodes.NameExpr(typ.type.name)
         name_expr.node = typ.type
-        intersection_type_info_wrapper.type_info.defn.base_type_exprs.append(name_expr)
-        intersection_type_info_wrapper.type_info.mro.append(typ.type)
-        intersection_type_info_wrapper.base_classes.append(typ.type)
+        intersection_type_info_wrapper.type_info.defn.base_type_exprs.insert(0, name_expr)
+        intersection_type_info_wrapper.type_info.mro.insert(0, typ.type)
+        intersection_type_info_wrapper.base_classes.insert(0, typ.type)
 
     @staticmethod
     def _is_intersection(typ: mypy.types.Type) -> bool:
-        return (
-            isinstance(typ, mypy.types.Instance)
-            and typ.type.fullname == "typing_protocol_intersection.types.ProtocolIntersection"
+        return isinstance(typ, mypy.types.Instance) and typ.type.fullname == (
+            "typing_protocol_intersection.types.ProtocolIntersection"
         )
 
 
@@ -124,7 +147,9 @@ def type_analyze_hook(fullname: str) -> Callable[[mypy.plugin.AnalyzeTypeContext
                 if not arg.type.is_protocol:
                     context.api.fail("Only Protocols can be used in ProtocolIntersection.", arg)
                 symbol_table.update(arg.type.names)
-        type_info = mk_protocol_typeinfo(context.type.name, fullname=fullname, symbol_table=symbol_table)
+        type_info = mk_protocol_intersection_typeinfo(
+            context.type.name, fullname=IncomparableTypeName(fullname), symbol_table=symbol_table
+        )
         t = context.type
         return mypy.types.Instance(type_info, args, line=t.line, column=t.column)
 
