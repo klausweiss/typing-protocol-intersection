@@ -16,5 +16,5 @@ class Builder(Generic[T]):
 
 
 # expected stdout
-# tests/testcases/fails_for_non_protocols.py:14: error: Only Protocols can be used in ProtocolIntersection.
+# tests/testcases/fails_for_non_protocols.py:14:25: error: Only Protocols can be used in ProtocolIntersection.  [misc]
 # Found 1 error in 1 file (checked 1 source file)

@@ -30,7 +30,7 @@ def main() -> None:
 
 
 # expected stdout
-# tests/testcases/function_return_type_unhappy_path.py:29: error: Argument 1 to "get_x_y" has incompatible type "ProtocolIntersection[HasY]"; expected "DesiredObject"
-# tests/testcases/function_return_type_unhappy_path.py:29: note: "ProtocolIntersection" is missing following "DesiredObject" protocol member:
-# tests/testcases/function_return_type_unhappy_path.py:29: note:     x
+# tests/testcases/function_return_type_unhappy_path.py:29:13: error: Argument 1 to "get_x_y" has incompatible type "ProtocolIntersection[HasY]"; expected "DesiredObject"  [arg-type]
+# tests/testcases/function_return_type_unhappy_path.py:29:13: note: "ProtocolIntersection" is missing following "DesiredObject" protocol member:
+# tests/testcases/function_return_type_unhappy_path.py:29:13: note:     x
 # Found 1 error in 1 file (checked 1 source file)

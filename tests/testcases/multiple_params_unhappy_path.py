@@ -50,7 +50,7 @@ def main() -> None:
 
 
 # expected stdout
-# tests/testcases/multiple_params_unhappy_path.py:49: error: Argument 1 to "get_x_y_z" has incompatible type "typing_protocol_intersection.types.ProtocolIntersection[HasY, HasX]"; expected "typing_protocol_intersection.types.ProtocolIntersection[HasZ, HasY, HasX]"
-# tests/testcases/multiple_params_unhappy_path.py:49: note: "ProtocolIntersection" is missing following "ProtocolIntersection" protocol member:
-# tests/testcases/multiple_params_unhappy_path.py:49: note:     z
+# tests/testcases/multiple_params_unhappy_path.py:49:15: error: Argument 1 to "get_x_y_z" has incompatible type "typing_protocol_intersection.types.ProtocolIntersection[HasY, HasX]"; expected "typing_protocol_intersection.types.ProtocolIntersection[HasZ, HasY, HasX]"  [arg-type]
+# tests/testcases/multiple_params_unhappy_path.py:49:15: note: "ProtocolIntersection" is missing following "ProtocolIntersection" protocol member:
+# tests/testcases/multiple_params_unhappy_path.py:49:15: note:     z
 # Found 1 error in 1 file (checked 1 source file)

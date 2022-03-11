@@ -21,12 +21,12 @@ class ProtocolIntersectionPlugin(mypy.plugin.Plugin):
 
     def get_method_signature_hook(
         self, fullname: str
-    ) -> Optional[Callable[[mypy.plugin.MethodSigContext], mypy.plugin.FunctionLike]]:
+    ) -> Optional[Callable[[mypy.plugin.MethodSigContext], mypy.types.FunctionLike]]:
         return intersection_function_signature_hook
 
     def get_function_signature_hook(
         self, fullname: str
-    ) -> Optional[Callable[[mypy.plugin.FunctionSigContext], mypy.plugin.FunctionLike]]:
+    ) -> Optional[Callable[[mypy.plugin.FunctionSigContext], mypy.types.FunctionLike]]:
         return intersection_function_signature_hook
 
 
@@ -130,7 +130,7 @@ class ProtocolIntersectionResolver:
         )
 
 
-def intersection_function_signature_hook(context: SignatureContext) -> mypy.plugin.FunctionLike:
+def intersection_function_signature_hook(context: SignatureContext) -> mypy.types.FunctionLike:
     resolver = ProtocolIntersectionResolver(context.api.fail)
     signature = context.default_signature
     signature.ret_type = resolver.fold_intersection_and_its_args(signature.ret_type)
