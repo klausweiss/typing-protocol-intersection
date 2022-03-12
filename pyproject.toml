@@ -43,12 +43,15 @@ deps =
     black
     isort
     pytest
+    pytest-cov
+commands_pre =
+    pip install -e .
 commands =
     mypy typing_protocol_intersection
     bandit typing_protocol_intersection -r
     black --check .
     isort --check .
-    pytest -vv
+    pytest -vv --cov=typing_protocol_intersection --cov-report=xml --cov-report=html
 
 [testenv:mypy{,0930}]
 deps =
