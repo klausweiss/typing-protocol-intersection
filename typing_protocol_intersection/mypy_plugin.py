@@ -9,9 +9,9 @@ import mypy.options
 import mypy.plugin
 import mypy.types
 
-if sys.version_info >= (3, 10):
+if sys.version_info >= (3, 10):  # pragma: no cover
     from typing import TypeGuard
-else:
+else:  # pragma: no cover
     from typing_extensions import TypeGuard
 
 SignatureContext = typing.Union[mypy.plugin.FunctionSigContext, mypy.plugin.MethodSigContext]
