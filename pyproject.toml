@@ -33,20 +33,22 @@ warn_unused_configs = true
 [tool.tox]
 legacy_tox_ini = """
 [tox]
-envlist = py{36,37,38,39,310}-mypy{,0930}-pytest
+envlist = py{36,37,38,39,310}-mypy{,0930}
 isolated_build = true
 
 [testenv]
 deps =
     {[testenv:mypy]deps}
-    {[testenv:pytest]deps}
+    bandit
+    black
+    isort
+    pytest
 commands =
     mypy typing_protocol_intersection
+    bandit typing_protocol_intersection -r
+    black --check .
+    isort --check .
     pytest -vv
-
-[testenv:pytest]
-deps =
-    pytest
 
 [testenv:mypy{,0930}]
 deps =
