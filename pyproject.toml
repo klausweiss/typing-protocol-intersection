@@ -42,7 +42,7 @@ deps =
     {[testenv:pytest]deps}
 commands =
     mypy typing_protocol_intersection
-    pytest
+    pytest -vv
 
 [testenv:pytest]
 deps =
