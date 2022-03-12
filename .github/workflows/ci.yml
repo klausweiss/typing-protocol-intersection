@@ -1,8 +1,10 @@
 name: tests & static analysis
 
 on:
-  - push
-  - pull_request
+  push:
+  pull_request:
+  schedule:
+    - cron: '0 7 * * *'
 
 jobs:
   build:
