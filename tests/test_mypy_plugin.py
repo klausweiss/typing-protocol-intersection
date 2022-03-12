@@ -22,7 +22,8 @@ def get_expected_stdout(contents: str) -> str:
     for line in lines:
         if line.strip().startswith("#") and "expected stderr" in line:
             break
-        stdout_lines.append(line.removeprefix("# "))
+        if line.startswith("# "):
+            stdout_lines.append(line[2:])
     return "\n".join(stdout_lines)
 
 
@@ -35,7 +36,8 @@ def get_expected_stderr(contents: str) -> str:
     for line in lines:
         if line.strip().startswith("#") and "expected stdout" in line:
             break
-        stderr_lines.append(line.removeprefix("# "))
+        if line.startswith("# "):
+            stderr_lines.append(line[2:])
     return "\n".join(stderr_lines)
 
 

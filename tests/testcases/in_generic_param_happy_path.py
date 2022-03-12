@@ -37,7 +37,7 @@ class DesiredObject(HasX, HasY, Protocol):
 
 
 def get_x_y(o: DesiredObject) -> None:
-    print(f"{o.x=}; {o.y=}")
+    print("x:{x}; y:{y}".format(x=o.x, y=o.x))
 
 
 def main() -> None:
