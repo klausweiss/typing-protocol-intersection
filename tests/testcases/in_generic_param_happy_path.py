@@ -1,7 +1,7 @@
 from types import SimpleNamespace
 from typing import Dict, Generic, Protocol, TypeVar
 
-from typing_protocol_intersection import ProtocolIntersection
+from typing_protocol_intersection import ProtocolIntersection  # pylint: disable=unused-import
 
 
 class HasX(Protocol):
@@ -12,23 +12,23 @@ class HasY(Protocol):
     y: str
 
 
-T = TypeVar("T")
+_T = TypeVar("_T")
 
 
-class Builder(Generic[T]):
+class Builder(Generic[_T]):
     def __init__(self) -> None:
         super().__init__()
         self._d: Dict[str, str] = {}
 
-    def with_x(self) -> "Builder[ProtocolIntersection[T, HasX]]":
+    def with_x(self) -> "Builder[ProtocolIntersection[_T, HasX]]":
         self._d["x"] = "X"
         return self  # type: ignore
 
-    def with_y(self) -> "Builder[ProtocolIntersection[T, HasY]]":
+    def with_y(self) -> "Builder[ProtocolIntersection[_T, HasY]]":
         self._d["y"] = "Y"
         return self  # type: ignore
 
-    def build(self) -> T:
+    def build(self) -> _T:
         return SimpleNamespace(**self._d)  # type: ignore
 
 
@@ -36,8 +36,8 @@ class DesiredObject(HasX, HasY, Protocol):
     pass
 
 
-def get_x_y(o: DesiredObject) -> None:
-    print("x:{x}; y:{y}".format(x=o.x, y=o.x))
+def get_x_y(obj: DesiredObject) -> None:
+    print(f"x:{obj.x}; y:{obj.x}")
 
 
 def main() -> None:

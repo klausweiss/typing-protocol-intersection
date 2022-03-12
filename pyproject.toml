@@ -33,6 +33,21 @@ warn_redundant_casts = true
 warn_return_any = true
 warn_unused_configs = true
 
+[tool.pylint.MASTER]
+extension-pkg-allow-list = "mypy"
+
+[tool.pylint."MESSAGES CONTROL"]
+disable = """
+    duplicate-code,
+    line-too-long,
+    missing-class-docstring,
+    missing-function-docstring,
+    missing-module-docstring,
+    no-name-in-module,
+    redefined-outer-name,
+    too-few-public-methods,
+    """
+
 [tool.tox]
 legacy_tox_ini = """
 [tox]
@@ -45,9 +60,10 @@ deps =
     bandit
     black
     isort
+    py37: typing-extensions
+    pylint
     pytest
     pytest-cov
-    py37: typing-extensions
 commands_pre =
     pip install -e .
 commands =
@@ -55,6 +71,7 @@ commands =
     bandit typing_protocol_intersection -r
     black --check .
     isort --check .
+    pylint typing_protocol_intersection tests
     pytest -vv --cov=typing_protocol_intersection
 
 [testenv:mypy{,0930}]

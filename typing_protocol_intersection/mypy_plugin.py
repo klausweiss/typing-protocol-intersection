@@ -18,6 +18,8 @@ SignatureContext = typing.Union[mypy.plugin.FunctionSigContext, mypy.plugin.Meth
 
 
 class ProtocolIntersectionPlugin(mypy.plugin.Plugin):
+    # pylint: disable=unused-argument
+
     def get_type_analyze_hook(
         self, fullname: str
     ) -> Optional[Callable[[mypy.plugin.AnalyzeTypeContext], mypy.types.Type]]:
@@ -49,7 +51,7 @@ class IncomparableTypeName(str):
             return False
         return super().__eq__(x)
 
-    def __hash__(self) -> int:
+    def __hash__(self) -> int:  # pylint: disable=useless-super-delegation
         return super().__hash__()
 
 
@@ -151,12 +153,11 @@ def type_analyze_hook(fullname: str) -> Callable[[mypy.plugin.AnalyzeTypeContext
         type_info = mk_protocol_intersection_typeinfo(
             context.type.name, fullname=IncomparableTypeName(fullname), symbol_table=symbol_table
         )
-        t = context.type
-        return mypy.types.Instance(type_info, args, line=t.line, column=t.column)
+        return mypy.types.Instance(type_info, args, line=context.type.line, column=context.type.column)
 
     return _type_analyze_hook
 
 
-def plugin(version: str) -> typing.Type[mypy.plugin.Plugin]:
+def plugin(_version: str) -> typing.Type[mypy.plugin.Plugin]:
     # ignore version argument if the plugin works with all mypy versions.
     return ProtocolIntersectionPlugin

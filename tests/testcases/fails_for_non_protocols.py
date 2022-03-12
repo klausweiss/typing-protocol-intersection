@@ -1,17 +1,17 @@
 from typing import Generic, TypeVar
 
-from typing_protocol_intersection import ProtocolIntersection
+from typing_protocol_intersection import ProtocolIntersection  # pylint: disable=unused-import
 
 
 class HasX:  # note this is not a Protocol
     x: str
 
 
-T = TypeVar("T")
+_T = TypeVar("_T")
 
 
-class Builder(Generic[T]):
-    def with_x(self) -> "Builder[ProtocolIntersection[T, HasX]]":
+class Builder(Generic[_T]):
+    def with_x(self) -> "Builder[ProtocolIntersection[_T, HasX]]":
         return self  # type: ignore
 
 

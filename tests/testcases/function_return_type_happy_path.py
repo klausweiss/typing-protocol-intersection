@@ -20,8 +20,8 @@ class DesiredObject(HasX, HasY, Protocol):
     pass
 
 
-def get_x_y(o: DesiredObject) -> None:
-    print("x:{x}; y:{y}".format(x=o.x, y=o.x))
+def get_x_y(obj: DesiredObject) -> None:
+    print(f"x:{obj.x}; y:{obj.x}")
 
 
 def main() -> None:

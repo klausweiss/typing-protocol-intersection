@@ -16,32 +16,32 @@ class HasZ(Protocol):
     z: str
 
 
-T = TypeVar("T")
+_T = TypeVar("_T")
 
 
-class Builder(Generic[T]):
+class Builder(Generic[_T]):
     def __init__(self) -> None:
         super().__init__()
         self._d: Dict[str, str] = {}
 
-    def with_x(self) -> "Builder[ProtocolIntersection[T, HasX]]":
+    def with_x(self) -> "Builder[ProtocolIntersection[_T, HasX]]":
         self._d["x"] = "X"
         return self  # type: ignore
 
-    def with_y(self) -> "Builder[ProtocolIntersection[T, HasY]]":
+    def with_y(self) -> "Builder[ProtocolIntersection[_T, HasY]]":
         self._d["y"] = "Y"
         return self  # type: ignore
 
-    def with_z(self) -> "Builder[ProtocolIntersection[T, HasZ]]":
+    def with_z(self) -> "Builder[ProtocolIntersection[_T, HasZ]]":
         self._d["z"] = "Z"
         return self  # type: ignore
 
-    def build(self) -> T:
+    def build(self) -> _T:
         return SimpleNamespace(**self._d)  # type: ignore
 
 
-def get_x_y_z(o: ProtocolIntersection[HasX, HasY, HasZ]) -> None:
-    print("x:{x}; y:{y}; z:{z}".format(x=o.x, y=o.x, z=o.z))
+def get_x_y_z(obj: ProtocolIntersection[HasX, HasY, HasZ]) -> None:
+    print(f"x:{obj.x}; y:{obj.x}; z:{obj.z}")
 
 
 def main() -> None:

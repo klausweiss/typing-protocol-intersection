@@ -44,8 +44,8 @@ def get_expected_stderr(contents: str) -> str:
 @pytest.fixture()
 def testcase_file(request):
     path = request.param
-    with open(HERE / path) as f:
-        contents = f.read()
+    with open(HERE / path, encoding="utf-8") as file:
+        contents = file.read()
     return _TestCase(HERE / path, get_expected_stdout(contents), get_expected_stderr(contents))
 
 
