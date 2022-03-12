@@ -1,3 +1,4 @@
+import sys
 import typing
 from collections import deque
 from typing import Callable, Optional
@@ -7,6 +8,11 @@ import mypy.nodes
 import mypy.options
 import mypy.plugin
 import mypy.types
+
+if sys.version_info >= (3, 10):
+    from typing import TypeGuard
+else:
+    from typing_extensions import TypeGuard
 
 SignatureContext = typing.Union[mypy.plugin.FunctionSigContext, mypy.plugin.MethodSigContext]
 
@@ -98,15 +104,10 @@ class ProtocolIntersectionResolver:
         args = [mypy.types.Instance(ti, []) for ti in type_info_wrapper.base_classes]
         return mypy.types.Instance(type_info_wrapper.type_info, args=args)
 
-    def _run_fold(self, type_: mypy.types.Type, intersection_type_info_wrapper: TypeInfoWrapper) -> TypeInfoWrapper:
+    def _run_fold(self, type_: mypy.types.Instance, intersection_type_info_wrapper: TypeInfoWrapper) -> TypeInfoWrapper:
         intersections_to_process = deque([type_])
         while intersections_to_process:
             intersection = intersections_to_process.popleft()
-
-            if not isinstance(intersection, mypy.types.Instance):
-                self._fail("All of Intersection's typevars should be a type instances!", type_)
-                return intersection_type_info_wrapper
-
             for arg in intersection.args:
                 if self._is_intersection(arg):
                     intersections_to_process.append(arg)
@@ -124,7 +125,7 @@ class ProtocolIntersectionResolver:
         intersection_type_info_wrapper.base_classes.insert(0, typ.type)
 
     @staticmethod
-    def _is_intersection(typ: mypy.types.Type) -> bool:
+    def _is_intersection(typ: mypy.types.Type) -> TypeGuard[mypy.types.Instance]:
         return isinstance(typ, mypy.types.Instance) and typ.type.fullname == (
             "typing_protocol_intersection.types.ProtocolIntersection"
         )
