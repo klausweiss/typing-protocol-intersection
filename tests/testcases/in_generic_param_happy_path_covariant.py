@@ -1,3 +1,4 @@
+from types import SimpleNamespace
 from typing import Dict, Generic, Protocol, TypeVar
 
 from typing_protocol_intersection import ProtocolIntersection
