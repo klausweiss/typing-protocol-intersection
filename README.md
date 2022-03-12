@@ -1,5 +1,8 @@
 # typing-protocol-intersection
 
+[![tests & static analysis](https://github.com/klausweiss/typing-protocol-intersection/actions/workflows/ci.yml/badge.svg)](https://github.com/klausweiss/typing-protocol-intersection/actions/workflows/ci.yml)
+
+
 ## Installation
 
 ```shell
