@@ -1,14 +1,6 @@
-from typing import Generic, TypeVar
-
-T = TypeVar("T")
-U = TypeVar("U")
+from typing import Any, Type
 
 
-# Although there are only 2 type parameters here, mypy plugin overrides this
-# to allow for an arbitrary number of type parameters, so constructs like
-#
-#   ProtocolIntersection[HasW, HasX, HasY, HasZ]
-#
-# are perfectly fine.
-class ProtocolIntersection(Generic[T, U]):
-    pass
+class ProtocolIntersection:
+    def __class_getitem__(cls, item: Any) -> "Type[ProtocolIntersection]":
+        pass

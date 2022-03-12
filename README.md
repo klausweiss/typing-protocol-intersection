@@ -70,12 +70,13 @@ if __name__ == "__main__":
 ```shell
 > # without plugin
 > mypy example.py
-example.py:44: error: "ProtocolIntersection[HasX, HasY]" has no attribute "x"
-example.py:44: error: "ProtocolIntersection[HasX, HasY]" has no attribute "y"
-example.py:48: error: Need type annotation for "valid_o"
-example.py:49: error: Argument 1 to "get_x_y_1" has incompatible type "ProtocolIntersection[ProtocolIntersection[Any, HasX], HasY]"; expected "DesiredObject"
-example.py:50: error: Argument 1 to "get_x_y_2" has incompatible type "ProtocolIntersection[ProtocolIntersection[Any, HasX], HasY]"; expected "ProtocolIntersection[HasX, HasY]"
-Found 5 errors in 1 file (checked 1 source file)
+example.py:18:25: error: "ProtocolIntersection" expects no type arguments, but 2 given  [type-arg]
+example.py:22:25: error: "ProtocolIntersection" expects no type arguments, but 2 given  [type-arg]
+example.py:35:18: error: "ProtocolIntersection" expects no type arguments, but 2 given  [type-arg]
+example.py:36:11: error: "ProtocolIntersection" has no attribute "x"  [attr-defined]
+example.py:36:11: error: "ProtocolIntersection" has no attribute "y"  [attr-defined]
+example.py:40:15: error: Argument 1 to "get_x_y_1" has incompatible type "ProtocolIntersection"; expected "DesiredObject"  [arg-type]
+Found 6 errors in 1 file (checked 1 source file)
 
 > # with plugin
 > mypy example.py
@@ -135,11 +136,11 @@ if __name__ == "__main__":
 
 ```shell
 > mypy example.py
-example.py:40: error: Argument 1 to "get_x_y_1" has incompatible type "ProtocolIntersection[HasX]"; expected "DesiredObject"
-example.py:40: note: "ProtocolIntersection" is missing following "DesiredObject" protocol member:
-example.py:40: note:     y
-example.py:41: error: Argument 1 to "get_x_y_2" has incompatible type "typing_protocol_intersection.types.ProtocolIntersection[HasX]"; expected "typing_protocol_intersection.types.ProtocolIntersection[HasY, HasX]"
-example.py:41: note: "ProtocolIntersection" is missing following "ProtocolIntersection" protocol member:
-example.py:41: note:     y
+example.py:40:15: error: Argument 1 to "get_x_y_1" has incompatible type "ProtocolIntersection[HasX]"; expected "DesiredObject"  [arg-type]
+example.py:40:15: note: "ProtocolIntersection" is missing following "DesiredObject" protocol member:
+example.py:40:15: note:     y
+example.py:41:15: error: Argument 1 to "get_x_y_2" has incompatible type "typing_protocol_intersection.types.ProtocolIntersection[HasX]"; expected "typing_protocol_intersection.types.ProtocolIntersection[HasY, HasX]"  [arg-type]
+example.py:41:15: note: "ProtocolIntersection" is missing following "ProtocolIntersection" protocol member:
+example.py:41:15: note:     y
 Found 2 errors in 1 file (checked 1 source file)
 ```
