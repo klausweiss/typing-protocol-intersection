@@ -86,9 +86,6 @@ def mk_protocol_intersection_typeinfo(
 
 
 class ProtocolIntersectionResolver:
-    def __init__(self, fail: Callable[[str, mypy.nodes.Context], None]) -> None:
-        self._fail = fail
-
     def fold_intersection_and_its_args(self, type_: mypy.types.Type) -> mypy.types.Type:
         folded_type = self.fold_intersection(type_)
         if isinstance(folded_type, mypy.types.Instance):
@@ -134,7 +131,7 @@ class ProtocolIntersectionResolver:
 
 
 def intersection_function_signature_hook(context: SignatureContext) -> mypy.types.FunctionLike:
-    resolver = ProtocolIntersectionResolver(context.api.fail)
+    resolver = ProtocolIntersectionResolver()
     signature = context.default_signature
     signature.ret_type = resolver.fold_intersection_and_its_args(signature.ret_type)
     signature.arg_types = [resolver.fold_intersection_and_its_args(t) for t in signature.arg_types]
