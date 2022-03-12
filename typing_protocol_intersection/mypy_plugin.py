@@ -3,6 +3,7 @@ import typing
 from collections import deque
 from typing import Callable, Optional
 
+import mypy.errorcodes
 import mypy.errors
 import mypy.nodes
 import mypy.options
@@ -145,7 +146,9 @@ def type_analyze_hook(fullname: str) -> Callable[[mypy.plugin.AnalyzeTypeContext
         for arg in args:
             if isinstance(arg, mypy.types.Instance):
                 if not arg.type.is_protocol:
-                    context.api.fail("Only Protocols can be used in ProtocolIntersection.", arg)
+                    context.api.fail(
+                        "Only Protocols can be used in ProtocolIntersection.", arg, code=mypy.errorcodes.VALID_TYPE
+                    )
                 symbol_table.update(arg.type.names)
         type_info = mk_protocol_intersection_typeinfo(
             context.type.name, fullname=IncomparableTypeName(fullname), symbol_table=symbol_table
