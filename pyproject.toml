@@ -44,6 +44,7 @@ deps =
     isort
     pytest
     pytest-cov
+    py37: typing-extensions
 commands_pre =
     pip install -e .
 commands =
@@ -51,7 +52,7 @@ commands =
     bandit typing_protocol_intersection -r
     black --check .
     isort --check .
-    pytest -vv --cov=typing_protocol_intersection --cov-report=xml --cov-report=html
+    pytest -vv --cov=typing_protocol_intersection
 
 [testenv:mypy{,0930}]
 deps =
