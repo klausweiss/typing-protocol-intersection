@@ -13,6 +13,7 @@ setuptools = "*"
 pytest = "*"
 isort = "*"
 tox = "*"
+bandit = "*"
 
 [requires]
 python_version = "3.10"
