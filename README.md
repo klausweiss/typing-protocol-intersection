@@ -2,11 +2,15 @@
 
 [![tests & static analysis](https://github.com/klausweiss/typing-protocol-intersection/actions/workflows/ci.yml/badge.svg)](https://github.com/klausweiss/typing-protocol-intersection/actions/workflows/ci.yml)
 
+A tiny Python 3 package providing exactly one class - `ProtocolIntersection` (for a `Protocol`s themselves see [PEP 544](https://peps.python.org/pep-0544/)).
+Along with a mypy plugin this class allows to say that a function takes a parameter which implements multiple protocols 
+or returns an object implementing multiple protocols without explicitly creating a new protocol class that inherits them.
+See the [examples](#examples) section below.
 
 ## Installation
 
 ```shell
-> pip install typing-protocol-intersection 
+pip install typing-protocol-intersection 
 ```
 
 ## Configuration
@@ -17,11 +21,29 @@
 plugins = typing_protocol_intersection.mypy_plugin
 ```
 
-## Example
+## Examples
+
+Make sure to check the [Recommended usage](#recommended-usage) section after you familiarize yourself with the examples.
+
+### Simple example
+
+```python
+from typing import Protocol
+from typing_protocol_intersection import ProtocolIntersection
+
+class HasX(Protocol):
+    x: str
+
+class HasY(Protocol):
+    y: str
+
+def foo(xy: ProtocolIntersection[HasX, HasY]) -> None:
+    print(xy.x, xy.y)
+```
 
 ### Valid program
 
-Here's what you can write with the help of this mypy plugin:
+Here's a more complex example showing what you can write with the help of this mypy plugin:
 
 ```python
 from types import SimpleNamespace
@@ -146,4 +168,29 @@ example.py:41:15: error: Argument 1 to "get_x_y_2" has incompatible type "typing
 example.py:41:15: note: "ProtocolIntersection" is missing following "ProtocolIntersection" protocol member:
 example.py:41:15: note:     y
 Found 2 errors in 1 file (checked 1 source file)
+```
+
+## Recommended usage
+
+The `ProtocolIntersection` class name might seem a bit lengthy, but it's explicit, which is good.
+For brevity and better readability, it's recommended to use an alias when importing. 
+
+```python
+from typing_protocol_intersection import ProtocolIntersection as Has
+```
+
+The simple example would translate to
+
+```python
+from typing import Protocol
+from typing_protocol_intersection import ProtocolIntersection as Has
+
+class X(Protocol):
+    x: str
+
+class Y(Protocol):
+    y: str
+
+def foo(xy: Has[X, Y]) -> None:
+    print(xy.x, xy.y)
 ```
