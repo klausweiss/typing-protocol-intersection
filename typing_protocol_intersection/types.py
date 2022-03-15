@@ -9,12 +9,15 @@ class ProtocolIntersection:
     Even though it doesn't derive Generic, mypy treats it as such when used
     with the typing_protocol_intersection plugin.
 
+    Reads best when imported as `Has`.
+
     Example usage:
         >>> from typing_extensions import Protocol
-        >>> class HasX(Protocol): ...
-        >>> class HasY(Protocol): ...
-        >>> class HasZ(Protocol): ...
-        >>> def foo(x: ProtocolIntersection[HasX, HasY, HasZ]) -> None:
+        >>> from typing_protocol_intersection import ProtocolIntersection as Has
+        >>> class X(Protocol): ...
+        >>> class Y(Protocol): ...
+        >>> class Z(Protocol): ...
+        >>> def foo(bar: Has[X, Y, Z]) -> None:
         ...     pass
 
     See package's README or tests for more advanced examples.
