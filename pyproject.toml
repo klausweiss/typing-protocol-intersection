@@ -51,7 +51,7 @@ disable = """
 [tool.tox]
 legacy_tox_ini = """
 [tox]
-envlist = py{37,38,39,310}-mypy{,0930}
+envlist = py{37,38,39,310}-mypy{,0920}
 isolated_build = true
 
 [testenv]
@@ -74,10 +74,10 @@ commands =
     pylint typing_protocol_intersection tests
     pytest -vv --cov=typing_protocol_intersection
 
-[testenv:mypy{,0930}]
+[testenv:mypy{,0920}]
 deps =
     mypy: mypy
-    mypy0930: mypy == 0.930  # lowest supported mypy version
+    mypy0920: mypy == 0.920  # lowest supported mypy version
 
 [gh-actions]
 python =
