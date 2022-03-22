@@ -2,7 +2,7 @@
 
 [![tests & static analysis](https://github.com/klausweiss/typing-protocol-intersection/actions/workflows/ci.yml/badge.svg)](https://github.com/klausweiss/typing-protocol-intersection/actions/workflows/ci.yml)
 
-A tiny Python 3 package providing exactly one class - `ProtocolIntersection` (for a `Protocol`s themselves see [PEP 544](https://peps.python.org/pep-0544/)).
+A tiny Python 3 package providing exactly one class - `ProtocolIntersection` (for `Protocol`s themselves see [PEP 544](https://peps.python.org/pep-0544/)).
 Along with a mypy plugin this class allows to say that a function takes a parameter which implements multiple protocols 
 or returns an object implementing multiple protocols without explicitly creating a new protocol class that inherits them.
 See the [examples](#examples) section below.
