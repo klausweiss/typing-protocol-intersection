@@ -11,6 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
+        # for the list of all versions look here: https://github.com/actions/python-versions
         python-version: [ '3.7', '3.8', '3.9', '3.10' ]
 
     steps:
