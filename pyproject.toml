@@ -46,6 +46,7 @@ disable = """
     no-name-in-module,
     redefined-outer-name,
     too-few-public-methods,
+    typevar-name-incorrect-variance,
     """
 
 [tool.tox]
