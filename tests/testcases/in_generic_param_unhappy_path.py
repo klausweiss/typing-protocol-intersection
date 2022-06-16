@@ -37,11 +37,11 @@ class DesiredObject(HasX, HasY, Protocol):
 
 
 def get_x_y_1(obj: DesiredObject) -> None:
-    print(f"x:{obj.x}; y:{obj.x}")
+    print(f"x:{obj.x}; y:{obj.y}")
 
 
 def get_x_y_2(obj: ProtocolIntersection[HasX, HasY]) -> None:
-    print(f"x:{obj.x}; y:{obj.x}")
+    print(f"x:{obj.x}; y:{obj.y}")
 
 
 def main() -> None:

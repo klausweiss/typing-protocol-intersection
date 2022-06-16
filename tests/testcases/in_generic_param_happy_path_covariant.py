@@ -38,7 +38,7 @@ class DesiredObject(HasY, HasX, Protocol):
 
 def get_x_y(builder: Builder[DesiredObject]) -> None:
     obj = builder.build()
-    print(f"x:{obj.x}; y:{obj.x}")
+    print(f"x:{obj.x}; y:{obj.y}")
 
 
 def main() -> None:

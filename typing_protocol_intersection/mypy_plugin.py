@@ -60,7 +60,7 @@ def mk_protocol_intersection_typeinfo(
     name: str,
     *,
     # For ProtocolIntersections to not be treated as the same type, but just as protocols,
-    # their fullnames need to differ - that's it's an IncomparableTypeName.
+    # their fullnames need to differ - that's why it's an IncomparableTypeName.
     fullname: IncomparableTypeName,
     symbol_table: Optional[mypy.nodes.SymbolTable] = None,
 ) -> mypy.nodes.TypeInfo:
@@ -74,7 +74,7 @@ def mk_protocol_intersection_typeinfo(
         ],
         type_vars=[],
     )
-    defn.fullname = IncomparableTypeName(fullname)
+    defn.fullname = fullname
     defn.info.is_protocol = True
     type_info = mypy.nodes.TypeInfo(
         names=symbol_table if symbol_table is not None else mypy.nodes.SymbolTable(),

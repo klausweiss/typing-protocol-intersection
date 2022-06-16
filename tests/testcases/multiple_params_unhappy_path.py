@@ -41,7 +41,7 @@ class Builder(Generic[_T]):
 
 
 def get_x_y_z(obj: ProtocolIntersection[HasX, HasY, HasZ]) -> None:
-    print(f"x:{obj.x}; y:{obj.x}; z:{obj.z}")
+    print(f"x:{obj.x}; y:{obj.y}; z:{obj.z}")
 
 
 def main() -> None:

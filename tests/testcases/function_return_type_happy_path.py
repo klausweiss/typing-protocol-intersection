@@ -21,7 +21,7 @@ class DesiredObject(HasX, HasY, Protocol):
 
 
 def get_x_y(obj: DesiredObject) -> None:
-    print(f"x:{obj.x}; y:{obj.x}")
+    print(f"x:{obj.x}; y:{obj.y}")
 
 
 def main() -> None:
