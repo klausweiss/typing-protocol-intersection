@@ -4,7 +4,8 @@ from typing_protocol_intersection import ProtocolIntersection as Has
 
 
 class Base(Protocol):
-    base: str
+    def base(self) -> None:
+        ...
 
 
 class X(Base, Protocol):  # pylint: disable=invalid-name
@@ -18,11 +19,14 @@ class Y(Protocol):  # pylint: disable=invalid-name
 class Impl:
     x = "x"
     y = "y"
-    base = "base"
+
+    def base(self) -> None:
+        print("Impl")
 
 
 def get_x_y(obj: Has[X, Y]) -> None:
-    print(f"x:{obj.x}; y:{obj.y}, base:{obj.base}")
+    obj.base()
+    print(f"x:{obj.x}; y:{obj.y}")
 
 
 def main() -> None:

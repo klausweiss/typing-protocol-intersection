@@ -61,6 +61,10 @@ def testcase_file(request):
             "testcases/protocol_extending_another_property_happy_path.py",
             id="protocol extending another protocol that has a property - happy path",
         ),
+        pytest.param(
+            "testcases/protocol_extending_another_method_happy_path.py",
+            id="protocol extending another protocol that has a method - happy path",
+        ),
         # endregion
         # region unhappy paths
         pytest.param(
