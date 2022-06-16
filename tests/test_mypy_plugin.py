@@ -57,6 +57,10 @@ def testcase_file(request):
         pytest.param("testcases/in_generic_param_happy_path_covariant.py", id="generic param, covariant - happy path"),
         pytest.param("testcases/function_return_type_happy_path.py", id="function return type - happy path"),
         pytest.param("testcases/multiple_params_happy_path.py", id="accepts multiple type parameters - happy path"),
+        pytest.param(
+            "testcases/protocol_extending_another_property_happy_path.py",
+            id="protocol extending another protocol that has a property - happy path",
+        ),
         # endregion
         # region unhappy paths
         pytest.param(

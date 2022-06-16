@@ -145,17 +145,34 @@ def type_analyze_hook(fullname: str) -> Callable[[mypy.plugin.AnalyzeTypeContext
         symbol_table = mypy.nodes.SymbolTable()
         for arg in args:
             if isinstance(arg, mypy.types.Instance):
-                if not arg.type.is_protocol:
+                if arg.type.is_protocol:
+                    this_arg_symbol_table = _get_symbol_table_of_protocol(arg)
+                    symbol_table.update(this_arg_symbol_table)
+                else:
                     context.api.fail(
                         "Only Protocols can be used in ProtocolIntersection.", arg, code=mypy.errorcodes.VALID_TYPE
                     )
-                symbol_table.update(arg.type.names)
         type_info = mk_protocol_intersection_typeinfo(
             context.type.name, fullname=IncomparableTypeName(fullname), symbol_table=symbol_table
         )
         return mypy.types.Instance(type_info, args, line=context.type.line, column=context.type.column)
 
     return _type_analyze_hook
+
+
+def _get_symbol_table_of_protocol(protocol: mypy.types.Instance) -> mypy.nodes.SymbolTable:
+    symbol_table = mypy.nodes.SymbolTable()
+    types_with_names_added = set()
+    types_with_names_to_be_added = deque([protocol.type])
+    while types_with_names_to_be_added:
+        type_ = types_with_names_to_be_added.popleft()
+        if type_ in types_with_names_added or (type_.module_name == "builtins" and type_.name == "object"):
+            # we don't want to popoulate the symbol_table with __dict__, __str__, etc.
+            continue
+        symbol_table.update(type_.names)
+        types_with_names_to_be_added.extend(type_.mro)
+        types_with_names_added.add(type_)
+    return symbol_table
 
 
 def plugin(_version: str) -> typing.Type[mypy.plugin.Plugin]:
