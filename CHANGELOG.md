@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2
+
+Fix support for protocols inheriting another protocols.
+
 ## 0.1.1
 
 Add `py.typed` to the build artifact.
