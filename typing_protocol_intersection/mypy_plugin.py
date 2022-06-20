@@ -121,10 +121,9 @@ class ProtocolIntersectionResolver:
 
     @staticmethod
     def _add_type_to_intersection(intersection_type_info_wrapper: TypeInfoWrapper, typ: mypy.types.Instance) -> None:
-        name_expr = mypy.nodes.NameExpr(typ.type.name)
-        name_expr.node = typ.type
-        intersection_type_info_wrapper.type_info.defn.base_type_exprs.insert(0, name_expr)
-
+        # We might be interested in modifying another properties too (like
+        # intersection_type_info_wrapper.type_info.defn.base_type_exprs), but up until now it seems what we have is
+        # enough. Keep number of modified properties as low as possible (so that it's manageable).
         intersection_type_info_wrapper.type_info.mro = [
             base for base in typ.type.mro if base not in intersection_type_info_wrapper.type_info.mro
         ] + intersection_type_info_wrapper.type_info.mro
