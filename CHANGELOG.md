@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.1
+
+Fix support for protocols inheriting another protocols when used as type arguments.
+
 ## 0.2
 
 Fix support for protocols inheriting another protocols.
