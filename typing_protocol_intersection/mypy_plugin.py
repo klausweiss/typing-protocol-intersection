@@ -124,6 +124,9 @@ class ProtocolIntersectionResolver:
         # We might be interested in modifying another properties too (like
         # intersection_type_info_wrapper.type_info.defn.base_type_exprs), but up until now it seems what we have is
         # enough. Keep number of modified properties as low as possible (so that it's manageable).
+        #
+        # We also don't check for is_protocol in the bae classes - mypy doesn't allow protocol to have non-protocol base
+        # classes anyway and for direct ProtocolIntersection type arguments we do the check in type_analyze_hook.
         intersection_type_info_wrapper.type_info.mro = [
             base for base in typ.type.mro if base not in intersection_type_info_wrapper.type_info.mro
         ] + intersection_type_info_wrapper.type_info.mro
