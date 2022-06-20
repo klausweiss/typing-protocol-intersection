@@ -42,6 +42,8 @@ class ProtocolIntersectionPlugin(mypy.plugin.Plugin):
 
 class TypeInfoWrapper(typing.NamedTuple):
     type_info: mypy.nodes.TypeInfo
+    # base_classes need to only contain the direct base classes - they are used  when pretty-printing the name of a
+    # concrete ProtocolIntersection
     base_classes: typing.List[mypy.nodes.TypeInfo]
 
 
@@ -122,7 +124,10 @@ class ProtocolIntersectionResolver:
         name_expr = mypy.nodes.NameExpr(typ.type.name)
         name_expr.node = typ.type
         intersection_type_info_wrapper.type_info.defn.base_type_exprs.insert(0, name_expr)
-        intersection_type_info_wrapper.type_info.mro.insert(0, typ.type)
+
+        intersection_type_info_wrapper.type_info.mro = [
+            base for base in typ.type.mro if base not in intersection_type_info_wrapper.type_info.mro
+        ] + intersection_type_info_wrapper.type_info.mro
         intersection_type_info_wrapper.base_classes.insert(0, typ.type)
 
     @staticmethod

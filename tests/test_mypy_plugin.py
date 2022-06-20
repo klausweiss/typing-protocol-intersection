@@ -65,6 +65,10 @@ def testcase_file(request):
             "testcases/protocol_extending_another_method_happy_path.py",
             id="protocol extending another protocol that has a method - happy path",
         ),
+        pytest.param(
+            "testcases/protocol_extending_another_builder_happy_path.py",
+            id="protocol extending another protocol, passed as a generic param - happy path",
+        ),
         # endregion
         # region unhappy paths
         pytest.param(
@@ -77,6 +81,10 @@ def testcase_file(request):
         ),
         pytest.param("testcases/function_return_type_unhappy_path.py", id="function return type - unhappy path"),
         pytest.param("testcases/multiple_params_unhappy_path.py", id="accepts multiple type parameters - unhappy path"),
+        pytest.param(
+            "testcases/protocol_extending_another_builder_unhappy_path.py",
+            id="protocol extending another protocol, passed as a generic param - unhappy path",
+        ),
         # endregion
     ],
     indirect=["testcase_file"],
