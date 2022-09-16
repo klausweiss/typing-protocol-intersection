@@ -11,8 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        # for the list of all versions look here: https://github.com/actions/python-versions
-        python-version: [ '3.7', '3.8', '3.9', '3.10' ]
+        # for the list of all versions look here: https://github.com/actions/python-versions/blob/main/versions-manifest.json
+        python-version: [ '3.7', '3.8', '3.9', '3.10', '3.11.0-rc.2' ]
 
     steps:
       - uses: actions/checkout@v1
