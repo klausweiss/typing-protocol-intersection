@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.2
+
+Add Python 3.11 support.
+
 ## 0.2.1
 
 Fix support for protocols inheriting another protocols when used as type arguments.
