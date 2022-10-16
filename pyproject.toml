@@ -65,6 +65,8 @@ deps =
     pylint
     pytest
     pytest-cov
+    # pinned because of bandit https://github.com/PyCQA/bandit/issues/956
+    importlib-metadata<5
 commands_pre =
     pip install -e .
 commands =
