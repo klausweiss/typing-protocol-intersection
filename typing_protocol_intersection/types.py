@@ -24,4 +24,4 @@ class ProtocolIntersection:
     """
 
     def __class_getitem__(cls, item: Any) -> Type["ProtocolIntersection"]:
-        pass
+        return cls
