@@ -23,5 +23,5 @@ class ProtocolIntersection:
     See package's README or tests for more advanced examples.
     """
 
-    def __class_getitem__(cls, item: Any) -> Type["ProtocolIntersection"]:
+    def __class_getitem__(cls, _item: Any) -> Type["ProtocolIntersection"]:
         return cls
