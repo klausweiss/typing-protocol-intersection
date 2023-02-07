@@ -42,7 +42,7 @@ class ProtocolIntersectionPlugin(mypy.plugin.Plugin):
 
 class TypeInfoWrapper(typing.NamedTuple):
     type_info: mypy.nodes.TypeInfo
-    # base_classes need to only contain the direct base classes - they are used  when pretty-printing the name of a
+    # base_classes need to only contain the direct base classes - they are used when pretty-printing the name of a
     # concrete ProtocolIntersection
     base_classes: typing.List[mypy.nodes.TypeInfo]
 
@@ -174,7 +174,7 @@ def type_analyze_hook(fullname: str) -> Callable[[mypy.plugin.AnalyzeTypeContext
 def plugin(version: str) -> typing.Type[mypy.plugin.Plugin]:
     parted_version = tuple(map(int, version.split(".")))
 
-    # suppoerted versions < 1.0.0
+    # supported versions < 1.0.0
     if len(parted_version) == 2 and (0, 920) <= parted_version <= (0, 991):
         return ProtocolIntersectionPlugin
 
