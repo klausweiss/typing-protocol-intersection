@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.3
+
+Explicitly specify supported mypy versions as 0.920 <= x <= 0.991 and fail loudly for others.
+
 ## 0.2.2
 
 Add Python 3.11 support.

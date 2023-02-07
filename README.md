@@ -10,6 +10,10 @@ It can be used either as a function parameter or as a return value.
 A mypy plugin that ships with the package is required for this to work.
 See the [examples](#examples) section below.
 
+## Supported versions
+
+The plugin supports python 3.7, 3.8, 3.9, 3.10 and 3.11 and mypy >= 0.920 and <= 0.991.
+
 ## Installation
 
 The `typing-protocol-intersection` package is pip-installable:
