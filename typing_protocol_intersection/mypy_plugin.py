@@ -2,6 +2,7 @@ import collections
 import sys
 import typing
 from collections import deque
+from itertools import takewhile
 from typing import Callable, Optional
 
 import mypy.errorcodes
@@ -172,10 +173,15 @@ def type_analyze_hook(fullname: str) -> Callable[[mypy.plugin.AnalyzeTypeContext
 
 
 def plugin(version: str) -> typing.Type[mypy.plugin.Plugin]:
-    parted_version = tuple(map(int, version.split(".")))
-
+    version_prefix, *_ = version.split("dev.", maxsplit=1)  # stripping +dev.f6a8037cc... suffix if applicable
+    numeric_prefixes = (_numeric_prefix(x) for x in version_prefix.split("."))
+    parted_version = tuple(int(prefix) if prefix else None for prefix in numeric_prefixes)
     # supported versions < 1.0.0
     if len(parted_version) == 2 and (0, 920) <= parted_version <= (0, 991):
         return ProtocolIntersectionPlugin
 
     raise NotImplementedError(f"typing-protocol-intersection does not support mypy=={version}")
+
+
+def _numeric_prefix(string: str) -> Optional[str]:
+    return "".join(takewhile(str.isdigit, string))
