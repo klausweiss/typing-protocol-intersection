@@ -7,6 +7,7 @@
     ```shell
     python -m build
     twine check dist/*
+    twine upload dist/* -r testpypi  # test before upload
     twine upload dist/*
     ```
 5. Create a new release on [github](https://github.com/klausweiss/typing-protocol-intersection/releases).
