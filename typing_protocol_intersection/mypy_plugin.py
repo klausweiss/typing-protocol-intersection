@@ -171,6 +171,11 @@ def type_analyze_hook(fullname: str) -> Callable[[mypy.plugin.AnalyzeTypeContext
     return _type_analyze_hook
 
 
-def plugin(_version: str) -> typing.Type[mypy.plugin.Plugin]:
-    # ignore version argument if the plugin works with all mypy versions.
-    return ProtocolIntersectionPlugin
+def plugin(version: str) -> typing.Type[mypy.plugin.Plugin]:
+    parted_version = tuple(map(int, version.split(".")))
+
+    # suppoerted versions < 1.0.0
+    if len(parted_version) == 2 and (0, 920) <= parted_version <= (0, 991):
+        return ProtocolIntersectionPlugin
+
+    raise NotImplementedError(f"typing-protocol-intersection does not support mypy=={version}")

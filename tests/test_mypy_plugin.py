@@ -2,6 +2,7 @@ import typing
 from pathlib import Path
 
 import mypy.api
+import mypy.version
 import pytest
 
 HERE = Path(__file__).parent
@@ -90,7 +91,16 @@ def testcase_file(request):
     indirect=["testcase_file"],
 )
 def test_mypy_plugin(testcase_file: _TestCase):
+    if (0, 920) <= tuple(map(int, mypy.version.__version__.split("."))) <= (0, 991):
+        stdout, stderr = _run_mypy(testcase_file.path)
+        assert (stdout.strip(), stderr.strip()) == (testcase_file.expected_stdout, testcase_file.expected_stderr)
+    else:
+        with pytest.raises(NotImplementedError):
+            _run_mypy(testcase_file.path)
+
+
+def _run_mypy(input_file: Path) -> typing.Tuple[str, str]:
     stdout, stderr, _ = mypy.api.run(
-        [str(testcase_file.path), "--config-file", str(HERE / "test-mypy.ini"), "--no-incremental"]
+        [str(input_file), "--config-file", str(HERE / "test-mypy.ini"), "--no-incremental"]
     )
-    assert (stdout.strip(), stderr.strip()) == (testcase_file.expected_stdout, testcase_file.expected_stderr)
+    return stdout, stderr
