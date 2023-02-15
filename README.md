@@ -12,7 +12,7 @@ See the [examples](#examples) section below.
 
 ## Supported versions
 
-The plugin supports python 3.7, 3.8, 3.9, 3.10 and 3.11 and mypy >= 0.920 and <= 0.991.
+The plugin supports python 3.7, 3.8, 3.9, 3.10 and 3.11 and mypy >= 0.920 and <= 1.0.x.
 
 ## Installation
 
@@ -51,7 +51,7 @@ def foo(xy: Has[X, Y]) -> None:
     print(xy.x, xy.y)
 ```
 
-### Complex exeample - valid program
+### Complex example - valid program
 
 Here's a more complex example showing what you can write with the help of this mypy plugin:
 
@@ -108,7 +108,7 @@ if __name__ == "__main__":
 Success: no issues found in 1 source file
 ```
 
-### Complex exeample - invalid program
+### Complex example - invalid program
 
 And here's how would the plugin help if you forgot to include one of the protocols while building an object:
 
@@ -160,6 +160,7 @@ if __name__ == "__main__":
 ```
 
 ```shell
+> # Note the real output would contain some invisible characters which were removed here.
 > mypy example.py
 example.py:40:15: error: Argument 1 to "get_x_y_1" has incompatible type "ProtocolIntersection[X]"; expected "DesiredObject"  [arg-type]
 example.py:40:15: note: "ProtocolIntersection" is missing following "DesiredObject" protocol member:
