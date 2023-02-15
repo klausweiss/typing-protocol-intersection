@@ -5,6 +5,8 @@ import mypy.api
 import mypy.version
 import pytest
 
+import typing_protocol_intersection.mypy_plugin
+
 HERE = Path(__file__).parent
 
 
@@ -115,3 +117,31 @@ def _strip(string: str) -> str:
     """
     zero_width_space = "\u200B"
     return string.strip().replace(zero_width_space, "")
+
+
+@pytest.mark.parametrize(
+    "version",
+    [
+        pytest.param("0.910", id="0.910 - before the first supported 0.920"),
+        pytest.param("0.992", id="0.992 - non-existent version greater than the last tested 0.x"),
+        pytest.param("1.1.0", id="1.1.0 - first greater than 1.0.x with breaking changes"),
+    ],
+)
+def test_raises_for_unsupported_mypy_versions(version: str) -> None:
+    with pytest.raises(NotImplementedError):
+        typing_protocol_intersection.mypy_plugin.plugin(version)
+
+
+@pytest.mark.parametrize(
+    "version",
+    [
+        pytest.param("0.920", id="0.920 - the first supported version"),
+        pytest.param("0.991", id="0.991 - the last known 0.x version"),
+        pytest.param("1.0.0", id="1.0.0 - the first 1.0.x version"),
+        pytest.param("1.0.100", id="1.0.100 - some other 1.0.x version"),
+    ],
+)
+def test_initializes_for_supported_mypy_versions(version: str) -> None:
+    # when
+    _plugin = typing_protocol_intersection.mypy_plugin.plugin(version)
+    # then no exception
