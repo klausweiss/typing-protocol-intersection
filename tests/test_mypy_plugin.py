@@ -5,6 +5,8 @@ import mypy.api
 import mypy.version
 import pytest
 
+import typing_protocol_intersection.mypy_plugin
+
 HERE = Path(__file__).parent
 
 
@@ -47,7 +49,11 @@ def testcase_file(request):
     path = request.param
     with open(HERE / path, encoding="utf-8") as file:
         contents = file.read()
-    return _TestCase(HERE / path, get_expected_stdout(contents), get_expected_stderr(contents))
+    return _TestCase(
+        HERE / path,
+        _strip(get_expected_stdout(contents)),
+        _strip(get_expected_stderr(contents)),
+    )
 
 
 @pytest.mark.parametrize(
@@ -91,16 +97,51 @@ def testcase_file(request):
     indirect=["testcase_file"],
 )
 def test_mypy_plugin(testcase_file: _TestCase):
-    if (0, 920) <= tuple(map(int, mypy.version.__version__.split("."))) <= (0, 991):
-        stdout, stderr = _run_mypy(testcase_file.path)
-        assert (stdout.strip(), stderr.strip()) == (testcase_file.expected_stdout, testcase_file.expected_stderr)
-    else:
-        with pytest.raises(NotImplementedError):
-            _run_mypy(testcase_file.path)
+    stdout, stderr = _run_mypy(testcase_file.path)
+    assert (stdout.strip(), stderr.strip()) == (testcase_file.expected_stdout, testcase_file.expected_stderr)
 
 
 def _run_mypy(input_file: Path) -> typing.Tuple[str, str]:
     stdout, stderr, _ = mypy.api.run(
         [str(input_file), "--config-file", str(HERE / "test-mypy.ini"), "--no-incremental"]
     )
-    return stdout, stderr
+    return _strip(stdout), _strip(stderr)
+
+
+def _strip(string: str) -> str:
+    """Removes all zero-width spaces from the input text and strips
+    whitespaces.
+
+    The need for the former was born with an ugly hack that we use to
+    trick mypyc.
+    """
+    zero_width_space = "\u200B"
+    return string.strip().replace(zero_width_space, "")
+
+
+@pytest.mark.parametrize(
+    "version",
+    [
+        pytest.param("0.910", id="0.910 - before the first supported 0.920"),
+        pytest.param("0.992", id="0.992 - non-existent version greater than the last tested 0.x"),
+        pytest.param("1.1.0", id="1.1.0 - first greater than 1.0.x with breaking changes"),
+    ],
+)
+def test_raises_for_unsupported_mypy_versions(version: str) -> None:
+    with pytest.raises(NotImplementedError):
+        typing_protocol_intersection.mypy_plugin.plugin(version)
+
+
+@pytest.mark.parametrize(
+    "version",
+    [
+        pytest.param("0.920", id="0.920 - the first supported version"),
+        pytest.param("0.991", id="0.991 - the last known 0.x version"),
+        pytest.param("1.0.0", id="1.0.0 - the first 1.0.x version"),
+        pytest.param("1.0.100", id="1.0.100 - some other 1.0.x version"),
+    ],
+)
+def test_initializes_for_supported_mypy_versions(version: str) -> None:
+    # when
+    _plugin = typing_protocol_intersection.mypy_plugin.plugin(version)
+    # then no exception

@@ -2,8 +2,7 @@ from typing import Any, Type
 
 
 class ProtocolIntersection:
-    """
-    Intersection of a couple of Protocols. Allows to specify a type that
+    """Intersection of a couple of Protocols. Allows to specify a type that
     conforms to multiple protocols without defining a separate class.
 
     Even though it doesn't derive Generic, mypy treats it as such when used
