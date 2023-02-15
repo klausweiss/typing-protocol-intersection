@@ -47,7 +47,11 @@ def testcase_file(request):
     path = request.param
     with open(HERE / path, encoding="utf-8") as file:
         contents = file.read()
-    return _TestCase(HERE / path, get_expected_stdout(contents), get_expected_stderr(contents))
+    return _TestCase(
+        HERE / path,
+        _strip(get_expected_stdout(contents)),
+        _strip(get_expected_stderr(contents)),
+    )
 
 
 @pytest.mark.parametrize(
@@ -99,4 +103,15 @@ def _run_mypy(input_file: Path) -> typing.Tuple[str, str]:
     stdout, stderr, _ = mypy.api.run(
         [str(input_file), "--config-file", str(HERE / "test-mypy.ini"), "--no-incremental"]
     )
-    return stdout, stderr
+    return _strip(stdout), _strip(stderr)
+
+
+def _strip(string: str) -> str:
+    """Removes all zero-width spaces from the input text and strips
+    whitespaces.
+
+    The need for the former was born with an ugly hack that we use to
+    trick mypyc.
+    """
+    zero_width_space = "\u200B"
+    return string.strip().replace(zero_width_space, "")

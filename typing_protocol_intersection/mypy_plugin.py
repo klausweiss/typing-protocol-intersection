@@ -48,24 +48,40 @@ class TypeInfoWrapper(typing.NamedTuple):
     base_classes: typing.List[mypy.nodes.TypeInfo]
 
 
-class IncomparableTypeName(str):
-    """A string that never returns True when compared (equality) with another instance of this type."""
+class UniqueFullname(str):
+    """A string that has a suffix consisting of zero-width spaces.
 
-    def __eq__(self, x: object) -> bool:
-        if isinstance(x, IncomparableTypeName):
-            return False
-        return super().__eq__(x)
+    Each instance created has more ZWSPs appended than the previously
+    created one. This is a hack to get class fullnames that are all
+    different from each other. We need this so that all
+    ProtocolIntersections are treated as separate classes, and not as
+    instances of the same class.
 
-    def __hash__(self) -> int:  # pylint: disable=useless-super-delegation
-        return super().__hash__()
+    We could just override __eq__, and in fact that's what's been here
+    before, but mypyc has an  optimization that treats all str
+    subclasses as strs when comparing. Distributions of mypy are
+    compiled with that optimization enabled, which used to break the
+    plugin.
+    """
+
+    ZERO_WIDTH_SPACE = "\u200B"
+    instance_counter: typing.ClassVar[int] = 0
+
+    def __new__(cls, base_fullname: str) -> "UniqueFullname":
+        cls.instance_counter += 1
+
+        # This is a very naive implementation. We could encode the suffix with more invisible characters, but for
+        # simplicity let's keep it as is, unless it turns out that the performance suffers a lot.
+        invisible_suffix = cls.instance_counter * cls.ZERO_WIDTH_SPACE
+        return super().__new__(cls, base_fullname + invisible_suffix)
 
 
 def mk_protocol_intersection_typeinfo(
     name: str,
     *,
     # For ProtocolIntersections to not be treated as the same type, but just as protocols,
-    # their fullnames need to differ - that's why it's an IncomparableTypeName.
-    fullname: IncomparableTypeName,
+    # their fullnames need to differ - that's why it's a UniqueFullname.
+    fullname: UniqueFullname,
     symbol_table: Optional[mypy.nodes.SymbolTable] = None,
 ) -> mypy.nodes.TypeInfo:
     defn = mypy.nodes.ClassDef(
@@ -102,7 +118,7 @@ class ProtocolIntersectionResolver:
             return type_
         type_info = mk_protocol_intersection_typeinfo(
             "ProtocolIntersection",
-            fullname=IncomparableTypeName("typing_protocol_intersection.types.ProtocolIntersection"),
+            fullname=UniqueFullname("typing_protocol_intersection.types.ProtocolIntersection"),
         )
         type_info_wrapper = self._run_fold(type_, TypeInfoWrapper(type_info, []))
         args = [mypy.types.Instance(ti, []) for ti in type_info_wrapper.base_classes]
@@ -135,7 +151,7 @@ class ProtocolIntersectionResolver:
 
     @staticmethod
     def _is_intersection(typ: mypy.types.Type) -> TypeGuard[mypy.types.Instance]:
-        return isinstance(typ, mypy.types.Instance) and typ.type.fullname == (
+        return isinstance(typ, mypy.types.Instance) and typ.type.fullname.startswith(
             "typing_protocol_intersection.types.ProtocolIntersection"
         )
 
@@ -162,7 +178,7 @@ def type_analyze_hook(fullname: str) -> Callable[[mypy.plugin.AnalyzeTypeContext
                     )
         symbol_table = mypy.nodes.SymbolTable(collections.ChainMap(*(base.names for base in base_types_of_args)))
         type_info = mk_protocol_intersection_typeinfo(
-            context.type.name, fullname=IncomparableTypeName(fullname), symbol_table=symbol_table
+            context.type.name, fullname=UniqueFullname(fullname), symbol_table=symbol_table
         )
         # add base classes to MRO - this way we can support protocols inheriting one another
         # we don't really care for mro here
@@ -177,7 +193,7 @@ def plugin(version: str) -> typing.Type[mypy.plugin.Plugin]:
     numeric_prefixes = (_numeric_prefix(x) for x in version_prefix.split("."))
     parted_version = tuple(int(prefix) if prefix else None for prefix in numeric_prefixes)
     if (len(parted_version) == 2 and (0, 920) <= parted_version <= (0, 991)) or (
-        len(parted_version) == 3 and (1, 0, 0) <= parted_version # < (1, 1, 0)
+        len(parted_version) == 3 and (1, 0, 0) <= parted_version < (1, 1, 0)
     ):
         return ProtocolIntersectionPlugin
 
