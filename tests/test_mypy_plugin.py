@@ -124,7 +124,7 @@ def _strip(string: str) -> str:
     [
         pytest.param("0.910", id="0.910 - before the first supported 0.920"),
         pytest.param("0.992", id="0.992 - non-existent version greater than the last tested 0.x"),
-        pytest.param("1.1.0", id="1.1.0 - first greater than 1.0.x with breaking changes"),
+        pytest.param("1.2.0", id="1.2.0 - first greater than 1.1.x with breaking changes"),
     ],
 )
 def test_raises_for_unsupported_mypy_versions(version: str) -> None:
@@ -139,6 +139,7 @@ def test_raises_for_unsupported_mypy_versions(version: str) -> None:
         pytest.param("0.991", id="0.991 - the last known 0.x version"),
         pytest.param("1.0.0", id="1.0.0 - the first 1.0.x version"),
         pytest.param("1.0.100", id="1.0.100 - some other 1.0.x version"),
+        pytest.param("1.1.1", id="1.1.1 - some 1.1.x version"),
     ],
 )
 def test_initializes_for_supported_mypy_versions(version: str) -> None:
