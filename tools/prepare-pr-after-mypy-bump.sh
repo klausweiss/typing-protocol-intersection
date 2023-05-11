@@ -91,6 +91,13 @@ git commit -m "Add support for mypy==$NEW_MAJOR.$NEW_MINOR.x
 
 This commit was generated with $SCRIPT_NAME"
 
-# github release command
+# script to release to github
+GITHUB_RELEASE_SCRIPT=`cat <<EOF
+#!/bin/sh
+gh release create '$NEW_PACKAGE_VERSION' --notes '$RELEASE_NOTES'
+EOF`
+echo "$GITHUB_RELEASE_SCRIPT" > ./create-github-release.sh
+chmod +x ./create-github-release.sh
+echo "Created a GitHub release script"
+echo "Test and push the changes, then run $(tput bold)./create-github-release.sh$(tput sgr0) to create a github release"
 
-echo "gh release create '$NEW_PACKAGE_VERSION' --notes '$RELEASE_NOTES'"
