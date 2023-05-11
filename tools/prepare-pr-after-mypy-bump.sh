@@ -51,12 +51,14 @@ NEW_PACKAGE_VERSION="$MAJOR_PACKAGE_VERSION.$MINOR_PACKAGE_VERSION.$NEW_PATCH_PA
 sed -E "s/(version = ).*/\1$NEW_PACKAGE_VERSION/" setup.cfg --in-place
 
 # update changelog
+RELEASE_NOTES=`cat <<EOF
+Add support for mypy==$NEW_MAJOR.$NEW_MINOR.x.
+EOF`
 CHANGELOG_ENTRY=`cat <<EOF
 
 ## $NEW_PACKAGE_VERSION
 
-Add support for mypy==$NEW_MAJOR.$NEW_MINOR.x.
-
+$RELEASE_NOTES
 EOF`
 
 # the code below inserts text after the first occurrence of pattern
@@ -88,3 +90,7 @@ git add \
 git commit -m "Add support for mypy==$NEW_MAJOR.$NEW_MINOR.x
 
 This commit was generated with $SCRIPT_NAME"
+
+# github release command
+
+echo "gh release create '$NEW_PACKAGE_VERSION' --notes '$RELEASE_NOTES'"
