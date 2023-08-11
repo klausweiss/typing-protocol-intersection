@@ -144,6 +144,7 @@ def test_raises_for_unsupported_mypy_versions(version: str) -> None:
         pytest.param("1.3.0", id="1.3.0 - some 1.3.x version"),
         pytest.param("1.4.0", id="1.4.0 - some 1.4.x version"),
         pytest.param("1.5.0", id="1.5.0 - some 1.5.x version"),
+        pytest.param("1.5.0", id="1.5.0 - some 1.5.x version"),
     ],
 )
 def test_initializes_for_supported_mypy_versions(version: str) -> None:

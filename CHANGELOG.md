@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.6
+
+Add support for mypy==1.5.x.
+
 ## 0.3.5
 
 Add support for mypy==1.5.x.
