@@ -23,6 +23,19 @@ SignatureContext = typing.Union[mypy.plugin.FunctionSigContext, mypy.plugin.Meth
 class ProtocolIntersectionPlugin(mypy.plugin.Plugin):
     # pylint: disable=unused-argument
 
+    def report_config_data(
+        self, ctx: mypy.plugin.ReportConfigContext
+    ) -> bool:
+        # When is_check is False, the value returned by this function will be
+        # serialized as json and saved to the mypy cache.  When is_check is
+        # True, the value returned will be compared against whatever was loaded
+        # from the cache.  This is so that a plugin can potentially invalidate
+        # the cache for a module, which is exactly what we want to do if we
+        # generated any types on a previous run; otherwise mypy will try to look
+        # them up in the cache (and subsequently crash when it fails to find
+        # them).
+        return UniqueFullname.instance_counter == 0
+
     def get_type_analyze_hook(
         self, fullname: str
     ) -> Optional[Callable[[mypy.plugin.AnalyzeTypeContext], mypy.types.Type]]:
