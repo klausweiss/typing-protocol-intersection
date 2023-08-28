@@ -23,6 +23,15 @@ SignatureContext = typing.Union[mypy.plugin.FunctionSigContext, mypy.plugin.Meth
 class ProtocolIntersectionPlugin(mypy.plugin.Plugin):
     # pylint: disable=unused-argument
 
+    def report_config_data(self, ctx: mypy.plugin.ReportConfigContext) -> int:
+        # Whatever this method returns is used by mypy to determine whether a module should be checked again or if a
+        # cache-loaded info will do. If the obtained value is different from the previous one, cache is invalidated.
+        #
+        # As far as this plugin is concerned, this method is only used to aid generation of `UniqueFullname`s. If it
+        # wasn't for this method, mypy couldn't identify where a runtime-generated class name comes from, as it looks up
+        # the class names in the cache (and subsequently crashes when it fails to find them).
+        return UniqueFullname.instance_counter
+
     def get_type_analyze_hook(
         self, fullname: str
     ) -> Optional[Callable[[mypy.plugin.AnalyzeTypeContext], mypy.types.Type]]:
