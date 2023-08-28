@@ -23,9 +23,7 @@ SignatureContext = typing.Union[mypy.plugin.FunctionSigContext, mypy.plugin.Meth
 class ProtocolIntersectionPlugin(mypy.plugin.Plugin):
     # pylint: disable=unused-argument
 
-    def report_config_data(
-        self, ctx: mypy.plugin.ReportConfigContext
-    ) -> int:
+    def report_config_data(self, ctx: mypy.plugin.ReportConfigContext) -> int:
         # Whatever this method returns is used by mypy to determine whether a module should be checked again or if a
         # cache-loaded info will do. If the obtained value is different from the previous one, cache is invalidated.
         #
