@@ -1,8 +1,6 @@
 import typing
 from pathlib import Path
 
-import mypy.api
-import mypy.version
 import pytest
 
 import typing_protocol_intersection.mypy_plugin
@@ -45,14 +43,14 @@ def get_expected_stderr(contents: str) -> str:
 
 
 @pytest.fixture()
-def testcase_file(request):
+def testcase_file(request, strip_invisible):
     path = request.param
     with open(HERE / path, encoding="utf-8") as file:
         contents = file.read()
     return _TestCase(
         HERE / path,
-        _strip(get_expected_stdout(contents)),
-        _strip(get_expected_stderr(contents)),
+        strip_invisible(get_expected_stdout(contents)),
+        strip_invisible(get_expected_stderr(contents)),
     )
 
 
@@ -96,27 +94,9 @@ def testcase_file(request):
     ],
     indirect=["testcase_file"],
 )
-def test_mypy_plugin(testcase_file: _TestCase):
-    stdout, stderr = _run_mypy(testcase_file.path)
+def test_mypy_plugin(testcase_file: _TestCase, run_mypy):
+    stdout, stderr = run_mypy(testcase_file.path)
     assert (stdout.strip(), stderr.strip()) == (testcase_file.expected_stdout, testcase_file.expected_stderr)
-
-
-def _run_mypy(input_file: Path) -> typing.Tuple[str, str]:
-    stdout, stderr, _ = mypy.api.run(
-        [str(input_file), "--config-file", str(HERE / "test-mypy.ini"), "--no-incremental"]
-    )
-    return _strip(stdout), _strip(stderr)
-
-
-def _strip(string: str) -> str:
-    """Removes all zero-width spaces from the input text and strips
-    whitespaces.
-
-    The need for the former was born with an ugly hack that we use to
-    trick mypyc.
-    """
-    zero_width_space = "\u200B"
-    return string.strip().replace(zero_width_space, "")
 
 
 @pytest.mark.parametrize(
