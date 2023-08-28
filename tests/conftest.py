@@ -1,10 +1,8 @@
-import subprocess
 import typing
 from pathlib import Path
 
-import pytest
-
 import mypy.api
+import pytest
 
 HERE = Path(__file__).parent
 
@@ -27,8 +25,8 @@ def strip_invisible() -> typing.Callable[[str], str]:
         """Removes all zero-width spaces from the input text and strips
         whitespaces.
 
-        The need for the former was born with an ugly hack that we use to
-        trick mypyc.
+        The need for the former was born with an ugly hack that we use
+        to trick mypyc.
         """
         zero_width_space = "\u200B"
         return string.strip().replace(zero_width_space, "")

@@ -1,3 +1,4 @@
+# pylint: skip-file
 """
 source: https://gist.github.com/evhub/5ef01a7d33582e84c9838bdbe9405cd4
 
