@@ -52,7 +52,7 @@ disable = """
 [tool.tox]
 legacy_tox_ini = """
 [tox]
-envlist = py{37,38,39,310,311}-mypy{,0920}
+envlist = py{37,38,39,310,311,312}-mypy{,0920}
 isolated_build = true
 
 [testenv]
@@ -91,4 +91,5 @@ python =
     3.9: py39
     3.10: py310
     3.11: py311
+    3.12: py312
 """
