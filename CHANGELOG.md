@@ -2,7 +2,8 @@
 
 ## 0.3.8
 
-Add support for mypy==1.6.x.
+- Add support for mypy==1.6.x.
+- Add Python 3.12 support.
 
 ## 0.3.7
 
