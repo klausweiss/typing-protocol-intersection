@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.8
+
+Add support for mypy==1.6.x.
+
 ## 0.3.7
 
 Fixed mypy crashing in incremental mode (#5). Contributed by @drvink.
