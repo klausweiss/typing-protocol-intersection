@@ -202,7 +202,7 @@ def plugin(version: str) -> typing.Type[mypy.plugin.Plugin]:
     numeric_prefixes = (_numeric_prefix(x) for x in version_prefix.split("."))
     parted_version = tuple(int(prefix) if prefix else None for prefix in numeric_prefixes)
     if (len(parted_version) == 2 and (0, 920) <= parted_version <= (0, 991)) or (
-        len(parted_version) == 3 and (1, 0, 0) <= parted_version < (1, 8, 0)
+        len(parted_version) == 3 and (1, 0, 0) <= parted_version < (1, 9, 0)
     ):
         return ProtocolIntersectionPlugin
 
