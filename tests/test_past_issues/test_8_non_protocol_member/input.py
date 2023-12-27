@@ -12,8 +12,8 @@ T = TypeVar("T")
 
 class Noop(Generic[T]):
     @classmethod
-    def noop(cls, t: T) -> ProtocolIntersection[T]:
-        return t
+    def noop(cls, value: T) -> ProtocolIntersection[T]:
+        return value
 
 
 np = Noop[NotProtocol].noop(NotProtocol())
