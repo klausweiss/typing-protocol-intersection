@@ -10,7 +10,7 @@ def test_8_non_protocol_member(run_mypy):
     # given
     input_file = HERE / "input.py"
     # when
-    stdout, stderr = run_mypy(input_file, no_incremental=False)
+    stdout, _stderr = run_mypy(input_file, no_incremental=False)
     # then no error
     assert not stdout.startswith("Success")
     assert "error:" in stdout
