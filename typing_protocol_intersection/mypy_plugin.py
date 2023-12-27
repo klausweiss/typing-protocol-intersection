@@ -18,6 +18,7 @@ else:  # pragma: no cover
     from typing_extensions import TypeGuard
 
 SignatureContext = typing.Union[mypy.plugin.FunctionSigContext, mypy.plugin.MethodSigContext]
+AnyContext = typing.Union[SignatureContext, mypy.plugin.AnalyzeTypeContext]
 
 
 class ProtocolIntersectionPlugin(mypy.plugin.Plugin):
@@ -116,6 +117,10 @@ def mk_protocol_intersection_typeinfo(
 
 
 class ProtocolIntersectionResolver:
+    def __init__(self, context: SignatureContext) -> None:
+        super().__init__()
+        self._context = context
+
     def fold_intersection_and_its_args(self, type_: mypy.types.Type) -> mypy.types.Type:
         folded_type = self.fold_intersection(type_)
         if isinstance(folded_type, mypy.types.Instance):
@@ -142,6 +147,8 @@ class ProtocolIntersectionResolver:
                     intersections_to_process.append(arg)
                     continue
                 if isinstance(arg, mypy.types.Instance):
+                    if not arg.type.is_protocol:
+                        _error_non_protocol_member(arg, context=self._context)
                     self._add_type_to_intersection(intersection_type_info_wrapper, arg)
         return intersection_type_info_wrapper
 
@@ -166,7 +173,7 @@ class ProtocolIntersectionResolver:
 
 
 def intersection_function_signature_hook(context: SignatureContext) -> mypy.types.FunctionLike:
-    resolver = ProtocolIntersectionResolver()
+    resolver = ProtocolIntersectionResolver(context)
     signature = context.default_signature
     signature.ret_type = resolver.fold_intersection_and_its_args(signature.ret_type)
     signature.arg_types = [resolver.fold_intersection_and_its_args(t) for t in signature.arg_types]
@@ -182,9 +189,7 @@ def type_analyze_hook(fullname: str) -> Callable[[mypy.plugin.AnalyzeTypeContext
                 if arg.type.is_protocol:
                     base_types_of_args.update(arg.type.mro)
                 else:
-                    context.api.fail(
-                        "Only Protocols can be used in ProtocolIntersection.", arg, code=mypy.errorcodes.VALID_TYPE
-                    )
+                    _error_non_protocol_member(arg, context=context)
         symbol_table = mypy.nodes.SymbolTable(collections.ChainMap(*(base.names for base in base_types_of_args)))
         type_info = mk_protocol_intersection_typeinfo(
             context.type.name, fullname=UniqueFullname(fullname), symbol_table=symbol_table
@@ -195,6 +200,10 @@ def type_analyze_hook(fullname: str) -> Callable[[mypy.plugin.AnalyzeTypeContext
         return mypy.types.Instance(type_info, args, line=context.type.line, column=context.type.column)
 
     return _type_analyze_hook
+
+
+def _error_non_protocol_member(arg: mypy.types.Type, *, context: AnyContext) -> None:
+    context.api.fail("Only Protocols can be used in ProtocolIntersection.", arg, code=mypy.errorcodes.VALID_TYPE)
 
 
 def plugin(version: str) -> typing.Type[mypy.plugin.Plugin]:
