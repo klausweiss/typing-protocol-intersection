@@ -50,6 +50,6 @@ def main() -> None:
 
 
 # expected stdout
-# tests/testcases/protocol_extending_another_builder_unhappy_path.py:44:5: error: "ProtocolIntersection[Y]" has no attribute "base"  [attr-defined]
-# tests/testcases/protocol_extending_another_builder_unhappy_path.py:50:13: error: Argument 1 to "get_x_y" has incompatible type "Builder[typing_protocol_intersection.types.ProtocolIntersection[X]]"; expected "Builder[typing_protocol_intersection.types.ProtocolIntersection[Y]]"  [arg-type]
+# tests/testcases/protocol_extending_another_builder_unhappy_path.py:43:5: error: "ProtocolIntersection[Y]" has no attribute "base"  [attr-defined]
+# tests/testcases/protocol_extending_another_builder_unhappy_path.py:49:13: error: Argument 1 to "get_x_y" has incompatible type "Builder[typing_protocol_intersection.types.ProtocolIntersection[X]]"; expected "Builder[typing_protocol_intersection.types.ProtocolIntersection[Y]]"  [arg-type]
 # Found 2 errors in 1 file (checked 1 source file)
