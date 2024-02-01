@@ -4,8 +4,7 @@ from typing_protocol_intersection import ProtocolIntersection as Has
 
 
 class Base(Protocol):
-    def base(self) -> None:
-        ...
+    def base(self) -> None: ...
 
 
 class X(Base, Protocol):  # pylint: disable=invalid-name

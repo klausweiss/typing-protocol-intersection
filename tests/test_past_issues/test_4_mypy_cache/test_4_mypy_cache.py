@@ -1,6 +1,7 @@
 """
 ref: https://github.com/klausweiss/typing-protocol-intersection/issues/4
 """
+
 from pathlib import Path
 
 HERE = Path(__file__).parent
