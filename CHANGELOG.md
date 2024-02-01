@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.0
+
+Drop support for Python 3.7.
+
 ## 0.3.10
 
 Add support for mypy==1.8.x.
