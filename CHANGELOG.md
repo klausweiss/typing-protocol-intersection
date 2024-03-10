@@ -2,7 +2,8 @@
 
 ## 0.4.0
 
-Drop support for Python 3.7.
+- Drop support for Python 3.7.
+- Add support for mypy==1.9.x.
 
 ## 0.3.10
 
