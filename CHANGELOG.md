@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.1
+
+Add support for mypy==1.10.x.
+
 ## 0.4.0
 
 - Drop support for Python 3.7.
