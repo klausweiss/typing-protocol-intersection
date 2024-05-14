@@ -1,5 +1,6 @@
 import typing
 from pathlib import Path
+import re
 
 import pytest
 
@@ -12,6 +13,14 @@ class _TestCase(typing.NamedTuple):
     path: Path
     expected_stdout: str
     expected_stderr: str
+
+
+WindowsPathPattern = re.compile(r"[a-z_\\]+\.py")
+
+
+def fix_paths(line: str) -> str:
+    """On Windows the path separator is \\ not /. This finds all python paths in tests and fixes them."""
+    return WindowsPathPattern.sub(lambda l: l.group().replace("\\", "/"), line)
 
 
 def get_expected_stdout(contents: str) -> str:
@@ -96,7 +105,7 @@ def testcase_file(request, strip_invisible):
 )
 def test_mypy_plugin(testcase_file: _TestCase, run_mypy):
     stdout, stderr = run_mypy(testcase_file.path)
-    assert (stdout.strip(), stderr.strip()) == (testcase_file.expected_stdout, testcase_file.expected_stderr)
+    assert (fix_paths(stdout.strip()), fix_paths(stderr.strip())) == (testcase_file.expected_stdout, testcase_file.expected_stderr)
 
 
 @pytest.mark.parametrize(
