@@ -1,4 +1,5 @@
 import typing
+import re
 from pathlib import Path
 
 import mypy.api
@@ -14,7 +15,7 @@ def run_mypy(strip_invisible: typing.Callable[[str], str]):
         if no_incremental:
             args.append("--no-incremental")
         stdout, stderr, _ = mypy.api.run(args)
-        return strip_invisible(stdout), strip_invisible(stderr)
+        return fix_paths(strip_invisible(stdout)), fix_paths(strip_invisible(stderr))
 
     return _run_mypy
 
@@ -32,3 +33,11 @@ def strip_invisible() -> typing.Callable[[str], str]:
         return string.strip().replace(zero_width_space, "")
 
     return _strip_invisible
+
+
+WindowsPyPathPattern = re.compile(r"[a-z_\\]+\.py")
+
+
+def fix_paths(line: str) -> str:
+    """On Windows the path separator is \\, not /. This makes all python paths in mypy output use / for consistency."""
+    return WindowsPyPathPattern.sub(lambda l: l.group().replace("\\", "/"), line)
