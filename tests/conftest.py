@@ -38,6 +38,6 @@ def strip_invisible() -> typing.Callable[[str], str]:
 WindowsPyPathPattern = re.compile(r"[a-z_\\]+\.py")
 
 
-def fix_paths(line: str) -> str:
+def fix_paths(text: str) -> str:
     """On Windows the path separator is \\, not /. This makes all python paths in mypy output use / for consistency."""
-    return WindowsPyPathPattern.sub(lambda l: l.group().replace("\\", "/"), line)
+    return WindowsPyPathPattern.sub(lambda l: l.group().replace("\\", "/"), text)
