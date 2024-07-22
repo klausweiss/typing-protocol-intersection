@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.4.3
+
+Add support for mypy==1.11.x.
+
+## 0.4.2
+
+Add support for mypy==1.11.x.
+
 ## 0.4.1
 
 Add support for mypy==1.10.x.
