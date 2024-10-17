@@ -4,6 +4,7 @@
 
 - Drop support for Python 3.8.
 - Add Python 3.13 support.
+- Add support for mypy==1.12.x.
 
 ## 0.4.2
 
