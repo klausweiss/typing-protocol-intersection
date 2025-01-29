@@ -28,7 +28,7 @@ def strip_invisible() -> typing.Callable[[str], str]:
         The need for the former was born with an ugly hack that we use
         to trick mypyc.
         """
-        zero_width_space = "\u200B"
+        zero_width_space = "\u200b"
         return string.strip().replace(zero_width_space, "")
 
     return _strip_invisible

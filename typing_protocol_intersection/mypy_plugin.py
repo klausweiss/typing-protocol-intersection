@@ -74,7 +74,7 @@ class UniqueFullname(str):
     plugin.
     """
 
-    ZERO_WIDTH_SPACE = "\u200B"
+    ZERO_WIDTH_SPACE = "\u200b"
     instance_counter: typing.ClassVar[int] = 0
 
     def __new__(cls, base_fullname: str) -> "UniqueFullname":
