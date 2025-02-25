@@ -104,7 +104,7 @@ def test_mypy_plugin(testcase_file: _TestCase, run_mypy):
     [
         pytest.param("0.910", id="0.910 - before the first supported 0.920"),
         pytest.param("0.992", id="0.992 - non-existent version greater than the last tested 0.x"),
-        pytest.param("1.15.0", id="1.15.0 - first greater than 1.14.x with breaking changes"),
+        pytest.param("1.16.0", id="1.16.0 - first greater than 1.15.x with breaking changes"),
     ],
 )
 def test_raises_for_unsupported_mypy_versions(version: str) -> None:
@@ -134,6 +134,7 @@ def test_raises_for_unsupported_mypy_versions(version: str) -> None:
         pytest.param("1.12.0", id="1.12.0 - some 1.12.x version"),
         pytest.param("1.13.0", id="1.13.0 - some 1.13.x version"),
         pytest.param("1.14.0", id="1.14.0 - some 1.14.x version"),
+        pytest.param("1.15.0", id="1.15.0 - some 1.15.x version"),
     ],
 )
 def test_initializes_for_supported_mypy_versions(version: str) -> None:
