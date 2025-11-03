@@ -11,7 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
+        mypy-version: ["0.920", "latest"]
 
     steps:
       - uses: actions/checkout@v3
@@ -19,9 +20,9 @@ jobs:
         uses: astral-sh/setup-uv@v4
       - name: Set Python version
         run: uv python install ${{ matrix.python-version }}
-      - name: Install dependencies
-        run: uv sync --python ${{ matrix.python-version }}
       - name: Run linting
         run: make lint
+      # Run tests with the matrix combination of Python and mypy versions
+      # Conditionally adds MYPY parameter only when not using latest
       - name: Run tests
-        run: make test
+        run: make test-version PYTHON=${{ matrix.python-version }} ${{ matrix.mypy-version != 'latest' && format('MYPY={0}', matrix.mypy-version) || '' }}

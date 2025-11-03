@@ -1,13 +1,16 @@
 .PHONY: help
 help:
 	@echo "Available targets:"
-	@echo "  install       - Install package and dependencies"
-	@echo "  test          - Run tests with coverage"
-	@echo "  test-all      - Run tests across all supported Python versions"
-	@echo "  lint          - Run all linters (mypy, ruff check, ruff format --check, pylint)"
-	@echo "  format        - Format code with ruff"
-	@echo "  all           - Run lint and test"
-	@echo "  clean         - Remove build artifacts and cache files"
+	@echo "  install                - Install package and dependencies"
+	@echo "  test                   - Run tests with coverage"
+	@echo "  test-all               - Run tests across all supported Python versions"
+	@echo "  test-version           - Run tests with specific Python and mypy versions"
+	@echo "                           Usage: make test-version PYTHON=3.10 MYPY=0.920"
+	@echo "                           MYPY is optional (defaults to latest)"
+	@echo "  lint                   - Run all linters (mypy, ruff check, ruff format --check, pylint)"
+	@echo "  format                 - Format code with ruff"
+	@echo "  all                    - Run lint and test"
+	@echo "  clean                  - Remove build artifacts and cache files"
 
 .PHONY: install
 install:
@@ -17,18 +20,37 @@ install:
 test:
 	uv run pytest -vv --cov=typing_protocol_intersection
 
+# Run tests with a specific Python and optionally mypy version
+# Usage: make test-version PYTHON=3.10 [MYPY=0.920]
+# The MYPY parameter is optional and defaults to the latest version
+.PHONY: test-version
+test-version:
+	@if [ -z "$(PYTHON)" ]; then \
+		echo "Error: PYTHON version must be specified. Usage: make test-version PYTHON=3.10 [MYPY=0.920]"; \
+		exit 1; \
+	fi
+	@if [ -n "$(MYPY)" ]; then \
+		echo "Running tests on Python $(PYTHON) with mypy==$(MYPY)..."; \
+		uv run --python $(PYTHON) --with mypy==$(MYPY) pytest -vv --cov=typing_protocol_intersection; \
+	else \
+		echo "Running tests on Python $(PYTHON) with latest mypy..."; \
+		uv run --python $(PYTHON) pytest -vv --cov=typing_protocol_intersection; \
+	fi
+
+# Run tests across all supported Python versions (3.10-3.14) with both
+# the oldest supported mypy version (0.920) and the latest version
 .PHONY: test-all
 test-all:
-	@echo "\nRunning tests on Python 3.10..."
-	uv run --python 3.10 pytest -vv --cov=typing_protocol_intersection
-	@echo "\nRunning tests on Python 3.11..."
-	uv run --python 3.11 pytest -vv --cov=typing_protocol_intersection
-	@echo "\nRunning tests on Python 3.12..."
-	uv run --python 3.12 pytest -vv --cov=typing_protocol_intersection
-	@echo "\nRunning tests on Python 3.13..."
-	uv run --python 3.13 pytest -vv --cov=typing_protocol_intersection
-	@echo "\nRunning tests on Python 3.14..."
-	uv run --python 3.14 pytest -vv --cov=typing_protocol_intersection
+	@$(MAKE) test-version PYTHON=3.10 MYPY=0.920
+	@$(MAKE) test-version PYTHON=3.10
+	@$(MAKE) test-version PYTHON=3.11 MYPY=0.920
+	@$(MAKE) test-version PYTHON=3.11
+	@$(MAKE) test-version PYTHON=3.12 MYPY=0.920
+	@$(MAKE) test-version PYTHON=3.12
+	@$(MAKE) test-version PYTHON=3.13 MYPY=0.920
+	@$(MAKE) test-version PYTHON=3.13
+	@$(MAKE) test-version PYTHON=3.14 MYPY=0.920
+	@$(MAKE) test-version PYTHON=3.14
 
 .PHONY: lint
 lint:
