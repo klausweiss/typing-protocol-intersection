@@ -2,6 +2,7 @@
 
 ## 0.6.0
 
+- Drop support for Python 3.9.
 - Drop support for mypy<1.5.0.
 - Add support for mypy==1.18.x.
 - Add support for Python 3.14.
