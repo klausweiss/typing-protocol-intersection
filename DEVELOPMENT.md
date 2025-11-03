@@ -1,21 +1,30 @@
 # Running tests
 
-Install [tox](https://pypi.org/project/tox/) and run:
+Install [uv](https://docs.astral.sh/uv/) and run tests using the Makefile:
 ```shell
-tox
+make install  # Install package and dependencies
+make lint     # Run all linters (mypy, ruff check, ruff format --check, pylint)
+make test     # Run tests with coverage
+make format   # Format code with ruff
+make all      # Run both lint and test
+```
+
+Alternatively, you can use [tox](https://pypi.org/project/tox/):
+```shell
+uv tool run tox
 ```
 
 # Publishing a new release
 
-1. Test with tox.
+1. Run tests as described above.
 2. Update [`CHANGELOG.md`](./CHANGELOG.md).
-3. Bump version in [`setup.cfg`](./setup.cfg).
-4. Upload to pypi:
+3. Bump version in [`pyproject.toml`](./pyproject.toml).
+4. Build and upload to pypi:
     ```shell
-    python -m build
-    twine check dist/*
-    twine upload dist/* -r testpypi  # test before upload
-    twine upload dist/*
+    uv build
+    uv run twine check dist/*
+    uv run twine upload dist/* -r testpypi  # test before upload
+    uv run twine upload dist/*
     ```
 5. Create a new release on [github](https://github.com/klausweiss/typing-protocol-intersection/releases).
 

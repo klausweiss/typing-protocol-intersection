@@ -40,15 +40,15 @@ sed -E      's/        pytest.param\(".*", id=".* - first greater than .* with b
 # update readme
 sed -E "s/(and mypy .* <= )\S+\.\S+\.\S+?(\..*)/\1$NEW_MAJOR.$NEW_MINOR.x\2/" README.md --in-place
 
-# bump version in setup.cfg
-PACKAGE_VERSION=`grep -E "version = .*" setup.cfg | sed "s/version = //"`
+# bump version in pyproject.toml
+PACKAGE_VERSION=`grep -E '^version = ".*"' pyproject.toml | sed 's/version = "\(.*\)"/\1/'`
 MAJOR_PACKAGE_VERSION=`echo $PACKAGE_VERSION | cut -d. -f1`
 MINOR_PACKAGE_VERSION=`echo $PACKAGE_VERSION | cut -d. -f2`
 PATCH_PACKAGE_VERSION=`echo $PACKAGE_VERSION | cut -d. -f3`
 # patch until the first 1.0 release, then we can change to minor
 NEW_PATCH_PACKAGE_VERSION=`echo $PATCH_PACKAGE_VERSION+1 | bc`
 NEW_PACKAGE_VERSION="$MAJOR_PACKAGE_VERSION.$MINOR_PACKAGE_VERSION.$NEW_PATCH_PACKAGE_VERSION"
-sed -E "s/(version = ).*/\1$NEW_PACKAGE_VERSION/" setup.cfg --in-place
+sed -E "s/(version = \").*/\1$NEW_PACKAGE_VERSION\"/" pyproject.toml --in-place
 
 # update changelog
 RELEASE_NOTES=`cat <<EOF
@@ -78,14 +78,14 @@ mv $tmp CHANGELOG.md
 
 
 # autoformat
-black .
+ruff format .
 
 # git add and commit
 git add \
     typing_protocol_intersection/mypy_plugin.py \
     tests/test_mypy_plugin.py \
     README.md \
-    setup.cfg \
+    pyproject.toml \
     CHANGELOG.md
 git commit -m "Add support for mypy==$NEW_MAJOR.$NEW_MINOR.x
 
