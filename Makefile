@@ -11,9 +11,9 @@ test: ## Run tests with coverage
 	uv run pytest -vv --cov=typing_protocol_intersection
 
 .PHONY: test-version
-test-version: ## Run tests with specific Python and mypy versions (PYTHON=3.10 [MYPY=0.920])
+test-version: ## Run tests with specific Python and mypy versions (PYTHON=3.10 [MYPY=1.5.0])
 	@if [ -z "$(PYTHON)" ]; then \
-		echo "Error: PYTHON version must be specified. Usage: make test-version PYTHON=3.10 [MYPY=0.920]"; \
+		echo "Error: PYTHON version must be specified. Usage: make test-version PYTHON=3.10 [MYPY=1.5.0]"; \
 		exit 1; \
 	fi
 	@if [ -n "$(MYPY)" ]; then \
@@ -25,16 +25,16 @@ test-version: ## Run tests with specific Python and mypy versions (PYTHON=3.10 [
 	fi
 
 .PHONY: test-all
-test-all: ## Run tests across all supported Python versions with mypy 0.920 and latest
-	@$(MAKE) test-version PYTHON=3.10 MYPY=0.920
+test-all: ## Run tests across all supported Python versions with mypy 1.5.0 and latest
+	@$(MAKE) test-version PYTHON=3.10 MYPY=1.5.0
 	@$(MAKE) test-version PYTHON=3.10
-	@$(MAKE) test-version PYTHON=3.11 MYPY=0.920
+	@$(MAKE) test-version PYTHON=3.11 MYPY=1.5.0
 	@$(MAKE) test-version PYTHON=3.11
-	@$(MAKE) test-version PYTHON=3.12 MYPY=0.920
+	@$(MAKE) test-version PYTHON=3.12 MYPY=1.5.0
 	@$(MAKE) test-version PYTHON=3.12
-	@$(MAKE) test-version PYTHON=3.13 MYPY=0.920
+	@$(MAKE) test-version PYTHON=3.13 MYPY=1.5.0
 	@$(MAKE) test-version PYTHON=3.13
-	@$(MAKE) test-version PYTHON=3.14 MYPY=0.920
+	@$(MAKE) test-version PYTHON=3.14 MYPY=1.5.0
 	@$(MAKE) test-version PYTHON=3.14
 
 .PHONY: lint

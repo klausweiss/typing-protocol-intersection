@@ -210,9 +210,7 @@ def plugin(version: str) -> typing.Type[mypy.plugin.Plugin]:
     version_prefix, *_ = version.split("dev.", maxsplit=1)  # stripping +dev.f6a8037cc... suffix if applicable
     numeric_prefixes = (_numeric_prefix(x) for x in version_prefix.split("."))
     parted_version = tuple(int(prefix) if prefix else None for prefix in numeric_prefixes)
-    if (len(parted_version) == 2 and (0, 920) <= parted_version <= (0, 991)) or (
-        len(parted_version) == 3 and (1, 0, 0) <= parted_version < (1, 19, 0)
-    ):
+    if len(parted_version) == 3 and (1, 5, 0) <= parted_version < (1, 19, 0):
         return ProtocolIntersectionPlugin
 
     raise NotImplementedError(f"typing-protocol-intersection does not support mypy=={version}")

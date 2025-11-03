@@ -102,8 +102,8 @@ def test_mypy_plugin(testcase_file: _TestCase, run_mypy):
 @pytest.mark.parametrize(
     "version",
     [
-        pytest.param("0.910", id="0.910 - before the first supported 0.920"),
-        pytest.param("0.992", id="0.992 - non-existent version greater than the last tested 0.x"),
+        pytest.param("0.920", id="0.920 - way before the first supported 1.5.0"),
+        pytest.param("1.4.0", id="1.4.0 - before the first supported 1.5.0"),
         pytest.param("1.19.0", id="1.19.0 - first greater than 1.18.x with breaking changes"),
     ],
 )
@@ -115,15 +115,7 @@ def test_raises_for_unsupported_mypy_versions(version: str) -> None:
 @pytest.mark.parametrize(
     "version",
     [
-        pytest.param("0.920", id="0.920 - the first supported version"),
-        pytest.param("0.991", id="0.991 - the last known 0.x version"),
-        pytest.param("1.0.0", id="1.0.0 - the first 1.0.x version"),
-        pytest.param("1.0.100", id="1.0.100 - some other 1.0.x version"),
-        pytest.param("1.1.1", id="1.1.1 - some 1.1.x version"),
-        pytest.param("1.2.0", id="1.2.0 - some 1.2.x version"),
-        pytest.param("1.3.0", id="1.3.0 - some 1.3.x version"),
-        pytest.param("1.4.0", id="1.4.0 - some 1.4.x version"),
-        pytest.param("1.5.0", id="1.5.0 - some 1.5.x version"),
+        pytest.param("1.5.0", id="1.5.0 - the first supported version"),
         pytest.param("1.6.0", id="1.6.0 - some 1.6.x version"),
         pytest.param("1.7.0", id="1.7.0 - some 1.7.x version"),
         pytest.param("1.8.0", id="1.8.0 - some 1.8.x version"),
