@@ -17,10 +17,10 @@ make test-all    # Run tests across all Python versions with mypy 1.5.0 and late
 3. Bump version in [`pyproject.toml`](./pyproject.toml).
 4. Build and upload to pypi:
     ```shell
-    uv build
-    uv run twine check dist/*
-    uv run twine upload dist/* -r testpypi  # test before upload
-    uv run twine upload dist/*
+    make build              # Build the package
+    make check-build        # Check for common issues
+    make upload             # Upload to testpypi (default)
+    make upload REPO=pypi   # Upload to production PyPI
     ```
 5. Create a new release on [github](https://github.com/klausweiss/typing-protocol-intersection/releases).
 

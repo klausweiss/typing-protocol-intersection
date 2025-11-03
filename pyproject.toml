@@ -34,6 +34,7 @@ dev = [
     "pytest",
     "pytest-cov",
     "ruff",
+    "twine",
 ]
 
 [tool.hatch.build.targets.wheel]

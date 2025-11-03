@@ -6,6 +6,30 @@ help: ## Show this help message
 install: ## Install package and dependencies
 	uv sync --all-extras --dev
 
+.PHONY: build
+build: ## Build the package (wheel and sdist)
+	uv build
+
+.PHONY: upload
+upload: ## Upload package to PyPI repository (REPO=testpypi or pypi, default: testpypi)
+	@if [ -z "$(REPO)" ]; then \
+		echo "Uploading to testpypi (default)..."; \
+		uv run twine upload dist/* -r testpypi; \
+	elif [ "$(REPO)" = "pypi" ]; then \
+		echo "Uploading to production PyPI..."; \
+		uv run twine upload dist/*; \
+	elif [ "$(REPO)" = "testpypi" ]; then \
+		echo "Uploading to testpypi..."; \
+		uv run twine upload dist/* -r testpypi; \
+	else \
+		echo "Error: Invalid REPO value. Use 'pypi' or 'testpypi'"; \
+		exit 1; \
+	fi
+
+.PHONY: check-build
+check-build: ## Check the built package for common issues
+	uv run twine check dist/*
+
 .PHONY: test
 test: ## Run tests with coverage
 	uv run pytest -vv --cov=typing_protocol_intersection
