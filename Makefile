@@ -3,6 +3,7 @@ help:
 	@echo "Available targets:"
 	@echo "  install       - Install package and dependencies"
 	@echo "  test          - Run tests with coverage"
+	@echo "  test-all      - Run tests across all supported Python versions"
 	@echo "  lint          - Run all linters (mypy, ruff check, ruff format --check, pylint)"
 	@echo "  format        - Format code with ruff"
 	@echo "  all           - Run lint and test"
@@ -15,6 +16,19 @@ install:
 .PHONY: test
 test:
 	uv run pytest -vv --cov=typing_protocol_intersection
+
+.PHONY: test-all
+test-all:
+	@echo "\nRunning tests on Python 3.10..."
+	uv run --python 3.10 pytest -vv --cov=typing_protocol_intersection
+	@echo "\nRunning tests on Python 3.11..."
+	uv run --python 3.11 pytest -vv --cov=typing_protocol_intersection
+	@echo "\nRunning tests on Python 3.12..."
+	uv run --python 3.12 pytest -vv --cov=typing_protocol_intersection
+	@echo "\nRunning tests on Python 3.13..."
+	uv run --python 3.13 pytest -vv --cov=typing_protocol_intersection
+	@echo "\nRunning tests on Python 3.14..."
+	uv run --python 3.14 pytest -vv --cov=typing_protocol_intersection
 
 .PHONY: lint
 lint:
