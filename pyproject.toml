@@ -107,30 +107,3 @@ disable = """
     too-few-public-methods,
     typevar-name-incorrect-variance,
     """
-
-[tool.tox]
-legacy_tox_ini = """
-[tox]
-envlist = py{39,310,311,312,313}-mypy{,0920}
-
-[testenv]
-deps =
-    {[testenv:mypy]deps}
-    pylint
-    pytest
-    pytest-cov
-    ruff
-commands_pre =
-    uv pip install --editable .
-commands =
-    mypy typing_protocol_intersection
-    ruff check .
-    ruff format --check .
-    pylint typing_protocol_intersection tests
-    pytest -vv --cov=typing_protocol_intersection
-
-[testenv:mypy{,0920}]
-deps =
-    mypy: mypy
-    mypy0920: mypy == 0.920  # lowest supported mypy version
-"""

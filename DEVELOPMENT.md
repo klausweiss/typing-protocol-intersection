@@ -2,16 +2,12 @@
 
 Install [uv](https://docs.astral.sh/uv/) and run tests using the Makefile:
 ```shell
-make install  # Install package and dependencies
-make lint     # Run all linters (mypy, ruff check, ruff format --check, pylint)
-make test     # Run tests with coverage
-make format   # Format code with ruff
-make all      # Run both lint and test
-```
-
-Alternatively, you can use [tox](https://pypi.org/project/tox/):
-```shell
-uv tool run tox
+make install     # Install package and dependencies
+make lint        # Run all linters (mypy, ruff check, ruff format --check, pylint)
+make test        # Run tests with coverage
+make format      # Format code with ruff
+make all         # Run both lint and test
+make test-all    # Run tests across all Python versions with mypy 0.920 and latest
 ```
 
 # Publishing a new release
