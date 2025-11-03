@@ -1,24 +1,17 @@
 import collections
-import sys
 import typing
 from collections import deque
+from collections.abc import Callable
 from itertools import takewhile
-from typing import Callable, Optional
+from typing import TypeGuard
 
 import mypy.errorcodes
-import mypy.errors
 import mypy.nodes
-import mypy.options
 import mypy.plugin
 import mypy.types
 
-if sys.version_info >= (3, 10):  # pragma: no cover
-    from typing import TypeGuard
-else:  # pragma: no cover
-    from typing_extensions import TypeGuard
-
-SignatureContext = typing.Union[mypy.plugin.FunctionSigContext, mypy.plugin.MethodSigContext]
-AnyContext = typing.Union[SignatureContext, mypy.plugin.AnalyzeTypeContext]
+SignatureContext = mypy.plugin.FunctionSigContext | mypy.plugin.MethodSigContext
+AnyContext = SignatureContext | mypy.plugin.AnalyzeTypeContext
 
 
 class ProtocolIntersectionPlugin(mypy.plugin.Plugin):
@@ -35,19 +28,19 @@ class ProtocolIntersectionPlugin(mypy.plugin.Plugin):
 
     def get_type_analyze_hook(
         self, fullname: str
-    ) -> Optional[Callable[[mypy.plugin.AnalyzeTypeContext], mypy.types.Type]]:
+    ) -> Callable[[mypy.plugin.AnalyzeTypeContext], mypy.types.Type] | None:
         if fullname == "typing_protocol_intersection.types.ProtocolIntersection":
             return type_analyze_hook(fullname)
         return None
 
     def get_method_signature_hook(
         self, fullname: str
-    ) -> Optional[Callable[[mypy.plugin.MethodSigContext], mypy.types.FunctionLike]]:
+    ) -> Callable[[mypy.plugin.MethodSigContext], mypy.types.FunctionLike] | None:
         return intersection_function_signature_hook
 
     def get_function_signature_hook(
         self, fullname: str
-    ) -> Optional[Callable[[mypy.plugin.FunctionSigContext], mypy.types.FunctionLike]]:
+    ) -> Callable[[mypy.plugin.FunctionSigContext], mypy.types.FunctionLike] | None:
         return intersection_function_signature_hook
 
 
@@ -55,7 +48,7 @@ class TypeInfoWrapper(typing.NamedTuple):
     type_info: mypy.nodes.TypeInfo
     # base_classes need to only contain the direct base classes - they are used when pretty-printing the name of a
     # concrete ProtocolIntersection
-    base_classes: typing.List[mypy.nodes.TypeInfo]
+    base_classes: list[mypy.nodes.TypeInfo]
 
 
 class UniqueFullname(str):
@@ -92,7 +85,7 @@ def mk_protocol_intersection_typeinfo(
     # For ProtocolIntersections to not be treated as the same type, but just as protocols,
     # their fullnames need to differ - that's why it's a UniqueFullname.
     fullname: UniqueFullname,
-    symbol_table: Optional[mypy.nodes.SymbolTable] = None,
+    symbol_table: mypy.nodes.SymbolTable | None = None,
 ) -> mypy.nodes.TypeInfo:
     defn = mypy.nodes.ClassDef(
         name=name,
@@ -206,7 +199,7 @@ def _error_non_protocol_member(arg: mypy.types.Type, *, context: AnyContext) -> 
     context.api.fail("Only Protocols can be used in ProtocolIntersection.", arg, code=mypy.errorcodes.VALID_TYPE)
 
 
-def plugin(version: str) -> typing.Type[mypy.plugin.Plugin]:
+def plugin(version: str) -> type[mypy.plugin.Plugin]:
     version_prefix, *_ = version.split("dev.", maxsplit=1)  # stripping +dev.f6a8037cc... suffix if applicable
     numeric_prefixes = (_numeric_prefix(x) for x in version_prefix.split("."))
     parted_version = tuple(int(prefix) if prefix else None for prefix in numeric_prefixes)
@@ -216,5 +209,5 @@ def plugin(version: str) -> typing.Type[mypy.plugin.Plugin]:
     raise NotImplementedError(f"typing-protocol-intersection does not support mypy=={version}")
 
 
-def _numeric_prefix(string: str) -> Optional[str]:
+def _numeric_prefix(string: str) -> str | None:
     return "".join(takewhile(str.isdigit, string))

@@ -1,5 +1,5 @@
 from types import SimpleNamespace
-from typing import Dict, Generic, Protocol, TypeVar
+from typing import Generic, Protocol, TypeVar
 
 from typing_protocol_intersection import ProtocolIntersection  # pylint: disable=unused-import
 
@@ -18,7 +18,7 @@ _T = TypeVar("_T", covariant=True)
 class Builder(Generic[_T]):
     def __init__(self) -> None:
         super().__init__()
-        self._d: Dict[str, str] = {}
+        self._d: dict[str, str] = {}
 
     def with_x(self) -> "Builder[ProtocolIntersection[_T, HasX]]":
         self._d["x"] = "X"

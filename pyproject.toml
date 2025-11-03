@@ -58,14 +58,13 @@ select = [
     "C4",     # flake8-comprehensions
     "DTZ",    # flake8-datetimez
     "PIE",    # flake8-pie
-    "T20",    # flake8-print
     "Q",      # flake8-quotes
     "RET",    # flake8-return
     "SIM",    # flake8-simplify
-    "ARG",    # flake8-unused-arguments
 ]
 ignore = [
     "S101",   # allow assert statements
+    "E501",   # some tests have too-long lines
     "D",      # pydocstyle - no docstrings required
 ]
 

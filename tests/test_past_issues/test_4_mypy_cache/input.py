@@ -24,13 +24,13 @@ class XY:
     y: str = "dfaf"
 
 
-class container:
+class Container:
     from typing_protocol_intersection import ProtocolIntersection as _ProtocolIntersection
 
     ProtocolIntersection = _ProtocolIntersection
 
 
-def foo(xy: container.ProtocolIntersection[X, Y]) -> None:
+def foo(xy: Container.ProtocolIntersection[X, Y]) -> None:
     print(xy.x, xy.y)
 
 

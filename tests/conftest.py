@@ -9,7 +9,7 @@ HERE = Path(__file__).parent
 
 @pytest.fixture
 def run_mypy(strip_invisible: typing.Callable[[str], str]):
-    def _run_mypy(input_file: Path, no_incremental: bool = True) -> typing.Tuple[str, str]:
+    def _run_mypy(input_file: Path, no_incremental: bool = True) -> tuple[str, str]:
         args = [str(input_file), "--config-file", str(HERE / "test-mypy.ini")]
         if no_incremental:
             args.append("--no-incremental")
