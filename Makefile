@@ -82,3 +82,11 @@ clean: ## Remove build artifacts, cache files, and compiled Python files
 	find . -type d -name __pycache__ -exec rm -rf {} +
 	find . -type f -name '*.pyc' -delete
 	find . -type f -name '*.pyo' -delete
+
+.PHONY: bump-mypy
+bump-mypy: ## Prepare PR for new mypy version (fetches latest or use VERSION=x.y.z)
+	@if [ -n "$(VERSION)" ]; then \
+		./tools/prepare-pr-after-mypy-bump.sh $(VERSION); \
+	else \
+		./tools/prepare-pr-after-mypy-bump.sh; \
+	fi

@@ -1,7 +1,31 @@
 #!/usr/bin/env bash
 
 SCRIPT_NAME=$0
-NEW_VERSION=${1?Version argument is required}
+
+# If no version argument provided, fetch the latest from PyPI
+if [ -z "$1" ]; then
+    echo "No version specified, fetching latest mypy version from PyPI..."
+    LATEST_VERSION=$(curl -s https://pypi.org/pypi/mypy/json | jq -r '.info.version')
+
+    if [ -z "$LATEST_VERSION" ] || [ "$LATEST_VERSION" = "null" ]; then
+        echo "Error: Failed to fetch latest mypy version from PyPI"
+        exit 1
+    fi
+
+    echo "Latest mypy version: $LATEST_VERSION"
+    read -p "Do you want to use this version? (y/n) " -n 1 -r
+    echo
+
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        echo "Aborted."
+        exit 1
+    fi
+
+    NEW_VERSION=$LATEST_VERSION
+else
+    NEW_VERSION=$1
+fi
+
 NEW_MAJOR=`echo $NEW_VERSION | cut -d. -f1`
 NEW_MINOR=`echo $NEW_VERSION | cut -d. -f2`
 NEW_PATCH=`echo $NEW_VERSION | cut -d. -f3`
