@@ -22,6 +22,7 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
+free-threaded-support = true
 
 [project.urls]
 Homepage = "https://github.com/klausweiss/typing-protocol-intersection"
