@@ -48,7 +48,8 @@ PATCH_PACKAGE_VERSION=`echo $PACKAGE_VERSION | cut -d. -f3`
 # patch until the first 1.0 release, then we can change to minor
 NEW_PATCH_PACKAGE_VERSION=`echo $PATCH_PACKAGE_VERSION+1 | bc`
 NEW_PACKAGE_VERSION="$MAJOR_PACKAGE_VERSION.$MINOR_PACKAGE_VERSION.$NEW_PATCH_PACKAGE_VERSION"
-sed -E "s/(version = \").*/\1$NEW_PACKAGE_VERSION\"/" pyproject.toml --in-place
+# Update only the project version line, not ruff's target-version
+sed -E "s/^version = \".*/version = \"$NEW_PACKAGE_VERSION\"/" pyproject.toml --in-place
 
 # update changelog
 RELEASE_NOTES=`cat <<EOF
@@ -71,14 +72,14 @@ awk \
     if (!found && $0 ~ pattern) {
         found = 1
         print text
-    } 
+    }
 	}
 	' CHANGELOG.md > $tmp
 mv $tmp CHANGELOG.md
 
 
 # autoformat
-ruff format .
+uv run ruff format .
 
 # git add and commit
 git add \
@@ -86,6 +87,7 @@ git add \
     tests/test_mypy_plugin.py \
     README.md \
     pyproject.toml \
+    uv.lock \
     CHANGELOG.md
 git commit -m "Add support for mypy==$NEW_MAJOR.$NEW_MINOR.x
 
@@ -100,4 +102,3 @@ echo "$GITHUB_RELEASE_SCRIPT" > ./create-github-release.sh
 chmod +x ./create-github-release.sh
 echo "Created a GitHub release script"
 echo "Test and push the changes, then run $(tput bold)./create-github-release.sh$(tput sgr0) to create a github release"
-
