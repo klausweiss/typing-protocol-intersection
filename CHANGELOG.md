@@ -7,6 +7,7 @@
 - Add support for mypy==1.18.x.
 - Add support for Python 3.14.
 - Use uv and ruff for dev environment, CI and linting.
+- Mark package with free-threaded-support.
 
 ## 0.5.3
 
