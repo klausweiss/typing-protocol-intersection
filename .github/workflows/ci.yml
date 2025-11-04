@@ -12,18 +12,18 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        # for the list of all versions look here: https://github.com/actions/python-versions/blob/main/versions-manifest.json
-        python-version: [ '3.9', '3.10', '3.11', '3.12', '3.13' ]
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14", "3.14t"]
+        mypy-version: ["1.5.0", "latest"]
 
     steps:
       - uses: actions/checkout@v3
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.python-version }}
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          python -m pip install tox tox-gh-actions
-      - name: Test with tox
-        run: tox
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+      - name: Set Python version
+        run: uv python install ${{ matrix.python-version }}
+      - name: Run linting
+        run: make lint
+      # Run tests with the matrix combination of Python and mypy versions
+      # Conditionally adds MYPY parameter only when not using latest
+      - name: Run tests
+        run: make test-version PYTHON=${{ matrix.python-version }} ${{ matrix.mypy-version != 'latest' && format('MYPY={0}', matrix.mypy-version) || '' }}

@@ -12,14 +12,14 @@ See the [examples](#examples) section below.
 
 ## Supported versions
 
-The plugin supports python 3.9 up to 3.13 and mypy >= 0.920 and <= 1.15.x.
+The plugin supports python 3.10 up to 3.14 and mypy >= 1.5.0 and <= 1.18.x.
 
 ## Installation
 
 The `typing-protocol-intersection` package is pip-installable:
 
 ```shell
-pip install typing-protocol-intersection 
+pip install typing-protocol-intersection
 ```
 
 ## Configuration

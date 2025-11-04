@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.6.0
+
+- Drop support for Python 3.9.
+- Drop support for mypy<1.5.0.
+- Add support for mypy==1.18.x.
+- Add support for Python 3.14.
+- Use uv and ruff for dev environment, CI and linting.
+- Mark package with free-threaded-support.
+
 ## 0.5.3
 
 Add support for mypy==1.15.x.

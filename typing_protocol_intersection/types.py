@@ -1,4 +1,4 @@
-from typing import Any, Type
+from typing import Any
 
 
 class ProtocolIntersection:
@@ -22,5 +22,5 @@ class ProtocolIntersection:
     See package's README or tests for more advanced examples.
     """
 
-    def __class_getitem__(cls, _item: Any) -> Type["ProtocolIntersection"]:
+    def __class_getitem__(cls, _item: Any) -> type["ProtocolIntersection"]:
         return cls

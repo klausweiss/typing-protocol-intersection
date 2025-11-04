@@ -1,7 +1,31 @@
 #!/usr/bin/env bash
 
 SCRIPT_NAME=$0
-NEW_VERSION=${1?Version argument is required}
+
+# If no version argument provided, fetch the latest from PyPI
+if [ -z "$1" ]; then
+    echo "No version specified, fetching latest mypy version from PyPI..."
+    LATEST_VERSION=$(curl -s https://pypi.org/pypi/mypy/json | jq -r '.info.version')
+
+    if [ -z "$LATEST_VERSION" ] || [ "$LATEST_VERSION" = "null" ]; then
+        echo "Error: Failed to fetch latest mypy version from PyPI"
+        exit 1
+    fi
+
+    echo "Latest mypy version: $LATEST_VERSION"
+    read -p "Do you want to use this version? (y/n) " -n 1 -r
+    echo
+
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        echo "Aborted."
+        exit 1
+    fi
+
+    NEW_VERSION=$LATEST_VERSION
+else
+    NEW_VERSION=$1
+fi
+
 NEW_MAJOR=`echo $NEW_VERSION | cut -d. -f1`
 NEW_MINOR=`echo $NEW_VERSION | cut -d. -f2`
 NEW_PATCH=`echo $NEW_VERSION | cut -d. -f3`
@@ -40,15 +64,16 @@ sed -E      's/        pytest.param\(".*", id=".* - first greater than .* with b
 # update readme
 sed -E "s/(and mypy .* <= )\S+\.\S+\.\S+?(\..*)/\1$NEW_MAJOR.$NEW_MINOR.x\2/" README.md --in-place
 
-# bump version in setup.cfg
-PACKAGE_VERSION=`grep -E "version = .*" setup.cfg | sed "s/version = //"`
+# bump version in pyproject.toml
+PACKAGE_VERSION=`grep -E '^version = ".*"' pyproject.toml | sed 's/version = "\(.*\)"/\1/'`
 MAJOR_PACKAGE_VERSION=`echo $PACKAGE_VERSION | cut -d. -f1`
 MINOR_PACKAGE_VERSION=`echo $PACKAGE_VERSION | cut -d. -f2`
 PATCH_PACKAGE_VERSION=`echo $PACKAGE_VERSION | cut -d. -f3`
 # patch until the first 1.0 release, then we can change to minor
 NEW_PATCH_PACKAGE_VERSION=`echo $PATCH_PACKAGE_VERSION+1 | bc`
 NEW_PACKAGE_VERSION="$MAJOR_PACKAGE_VERSION.$MINOR_PACKAGE_VERSION.$NEW_PATCH_PACKAGE_VERSION"
-sed -E "s/(version = ).*/\1$NEW_PACKAGE_VERSION/" setup.cfg --in-place
+# Update only the project version line, not ruff's target-version
+sed -E "s/^version = \".*/version = \"$NEW_PACKAGE_VERSION\"/" pyproject.toml --in-place
 
 # update changelog
 RELEASE_NOTES=`cat <<EOF
@@ -71,21 +96,22 @@ awk \
     if (!found && $0 ~ pattern) {
         found = 1
         print text
-    } 
+    }
 	}
 	' CHANGELOG.md > $tmp
 mv $tmp CHANGELOG.md
 
 
 # autoformat
-black .
+uv run ruff format .
 
 # git add and commit
 git add \
     typing_protocol_intersection/mypy_plugin.py \
     tests/test_mypy_plugin.py \
     README.md \
-    setup.cfg \
+    pyproject.toml \
+    uv.lock \
     CHANGELOG.md
 git commit -m "Add support for mypy==$NEW_MAJOR.$NEW_MINOR.x
 
@@ -100,4 +126,3 @@ echo "$GITHUB_RELEASE_SCRIPT" > ./create-github-release.sh
 chmod +x ./create-github-release.sh
 echo "Created a GitHub release script"
 echo "Test and push the changes, then run $(tput bold)./create-github-release.sh$(tput sgr0) to create a github release"
-

@@ -1,21 +1,26 @@
 # Running tests
 
-Install [tox](https://pypi.org/project/tox/) and run:
+Install [uv](https://docs.astral.sh/uv/) and run tests using the Makefile:
 ```shell
-tox
+make install     # Install package and dependencies
+make lint        # Run all linters (mypy, ruff check, ruff format --check, pylint)
+make test        # Run tests with coverage
+make format      # Format code with ruff
+make all         # Run both lint and test
+make test-all    # Run tests across all Python versions with mypy 1.5.0 and latest
 ```
 
 # Publishing a new release
 
-1. Test with tox.
+1. Run tests as described above.
 2. Update [`CHANGELOG.md`](./CHANGELOG.md).
-3. Bump version in [`setup.cfg`](./setup.cfg).
-4. Upload to pypi:
+3. Bump version in [`pyproject.toml`](./pyproject.toml).
+4. Build and upload to pypi:
     ```shell
-    python -m build
-    twine check dist/*
-    twine upload dist/* -r testpypi  # test before upload
-    twine upload dist/*
+    make build              # Build the package
+    make check-build        # Check for common issues
+    make upload             # Upload to testpypi (default)
+    make upload REPO=pypi   # Upload to production PyPI
     ```
 5. Create a new release on [github](https://github.com/klausweiss/typing-protocol-intersection/releases).
 

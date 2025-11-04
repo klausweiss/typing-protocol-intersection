@@ -1,17 +1,77 @@
 [build-system]
-requires = [
-    "setuptools>=42",
-    "wheel"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "typing-protocol-intersection"
+version = "0.6.0"
+description = "Protocol intersection for mypy"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [
 ]
-build-backend = "setuptools.build_meta"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Typing :: Typed",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+free-threaded-support = true
 
-[tool.black]
+[project.urls]
+Homepage = "https://github.com/klausweiss/typing-protocol-intersection"
+"Bug Tracker" = "https://github.com/klausweiss/typing-protocol-intersection/issues"
+
+[dependency-groups]
+dev = [
+    "mypy",
+    "pylint",
+    "pytest",
+    "pytest-cov",
+    "ruff",
+    "twine",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["."]
+include = ["**/*.py", "**/*.pyi", "**/py.typed"]
+
+[tool.ruff]
 line-length = 120
-target-version = ['py39']
-include = '\.pyi?$'
+target-version = "py310"
 
-[tool.isort]
-line_length = 120
+[tool.ruff.lint]
+select = [
+    "E",      # pycodestyle errors
+    "W",      # pycodestyle warnings
+    "F",      # pyflakes
+    "I",      # isort
+    "N",      # pep8-naming
+    "UP",     # pyupgrade
+    "B",      # flake8-bugbear
+    "S",      # flake8-bandit
+    "C4",     # flake8-comprehensions
+    "DTZ",    # flake8-datetimez
+    "PIE",    # flake8-pie
+    "Q",      # flake8-quotes
+    "RET",    # flake8-return
+    "SIM",    # flake8-simplify
+]
+ignore = [
+    "S101",   # allow assert statements
+    "E501",   # some tests have too-long lines
+    "D",      # pydocstyle - no docstrings required
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
 
 [tool.mypy]
 check_untyped_defs = true
@@ -48,47 +108,3 @@ disable = """
     too-few-public-methods,
     typevar-name-incorrect-variance,
     """
-
-[tool.tox]
-legacy_tox_ini = """
-[tox]
-envlist = py{39,310,311,312,313}-mypy{,0920}
-isolated_build = true
-
-[testenv]
-deps =
-    {[testenv:mypy]deps}
-    bandit
-    black
-    docformatter
-    isort
-    py37: typing-extensions
-    pylint
-    pytest
-    pytest-cov
-    # pinned because of bandit https://github.com/PyCQA/bandit/issues/956
-    importlib-metadata<5
-commands_pre =
-    pip install --editable .
-commands =
-    mypy typing_protocol_intersection
-    bandit typing_protocol_intersection --recursive
-    black --check .
-    isort --check .
-    docformatter --check typing_protocol_intersection tests --recursive
-    pylint typing_protocol_intersection tests
-    pytest -vv --cov=typing_protocol_intersection
-
-[testenv:mypy{,0920}]
-deps =
-    mypy: mypy
-    mypy0920: mypy == 0.920  # lowest supported mypy version
-
-[gh-actions]
-python =
-    3.9: py39
-    3.10: py310
-    3.11: py311
-    3.12: py312
-    3.13: py313
-"""
