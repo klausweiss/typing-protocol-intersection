@@ -45,7 +45,7 @@ test-version: ## Run tests with specific Python and mypy versions (PYTHON=3.10 [
 		uv run --python $(PYTHON) --with mypy==$(MYPY) pytest -vv --cov=typing_protocol_intersection; \
 	else \
 		echo "Running tests on Python $(PYTHON) with latest mypy..."; \
-		uv run --python $(PYTHON) pytest -vv --cov=typing_protocol_intersection; \
+		uv run --python $(PYTHON) --with mypy --upgrade pytest -vv --cov=typing_protocol_intersection; \
 	fi
 
 .PHONY: test-all
