@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.6.1
+
+Add support for mypy==1.19.x.
+
 ## 0.6.0
 
 - Drop support for Python 3.9.
