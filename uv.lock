@@ -1071,7 +1071,7 @@ wheels = [
 
 [[package]]
 name = "typing-protocol-intersection"
-version = "0.6.3"
+version = "0.6.4"
 source = { editable = "." }
 
 [package.dev-dependencies]

@@ -12,7 +12,7 @@ See the [examples](#examples) section below.
 
 ## Supported versions
 
-The plugin supports python 3.10 up to 3.14 and mypy >= 1.5.0 and <= 2.0.x.
+The plugin supports python 3.10 up to 3.14 and mypy >= 1.5.0 and <= 2.1.x.
 
 ## Installation
 

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.6.4
+
+Add support for mypy==2.1.x.
+
 ## 0.6.3
 
 Add support for mypy==2.0.x.
