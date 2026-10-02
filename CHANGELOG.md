@@ -2,9 +2,11 @@
 
 ## 0.6.7
 
-Add support for mypy==2.4.x.
+- Add support for mypy==2.4.x.
+- Add support for python 3.15.
+- Remove support for python 3.10.
 
-## 0.6.5
+## 0.6.6
 
 Add support for mypy==2.3.x.
 

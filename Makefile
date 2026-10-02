@@ -35,9 +35,9 @@ test: ## Run tests with coverage
 	uv run pytest -vv --cov=typing_protocol_intersection
 
 .PHONY: test-version
-test-version: ## Run tests with specific Python and mypy versions (PYTHON=3.10 [MYPY=1.5.0])
+test-version: ## Run tests with specific Python and mypy versions (PYTHON=3.11 [MYPY=1.5.0])
 	@if [ -z "$(PYTHON)" ]; then \
-		echo "Error: PYTHON version must be specified. Usage: make test-version PYTHON=3.10 [MYPY=1.5.0]"; \
+		echo "Error: PYTHON version must be specified. Usage: make test-version PYTHON=3.11 [MYPY=1.5.0]"; \
 		exit 1; \
 	fi
 	@if [ -n "$(MYPY)" ]; then \
@@ -50,8 +50,6 @@ test-version: ## Run tests with specific Python and mypy versions (PYTHON=3.10 [
 
 .PHONY: test-all
 test-all: ## Run tests across all supported Python versions with mypy 1.5.0 and latest
-	@$(MAKE) test-version PYTHON=3.10 MYPY=1.5.0
-	@$(MAKE) test-version PYTHON=3.10
 	@$(MAKE) test-version PYTHON=3.11 MYPY=1.5.0
 	@$(MAKE) test-version PYTHON=3.11
 	@$(MAKE) test-version PYTHON=3.12 MYPY=1.5.0
@@ -62,17 +60,21 @@ test-all: ## Run tests across all supported Python versions with mypy 1.5.0 and 
 	@$(MAKE) test-version PYTHON=3.14
 	@$(MAKE) test-version PYTHON=3.14t MYPY=1.5.0
 	@$(MAKE) test-version PYTHON=3.14t
+	@$(MAKE) test-version PYTHON=3.15 MYPY=1.5.0
+	@$(MAKE) test-version PYTHON=3.15
+	@$(MAKE) test-version PYTHON=3.15t MYPY=1.5.0
+	@$(MAKE) test-version PYTHON=3.15t
 
 .PHONY: lint
 lint: ## Run all linters (mypy, ruff check, ruff format --check, pylint)
 	uv run mypy typing_protocol_intersection
 	uv run ruff check .
-	uv run ruff format --check .
+	uv run ruff format --check . --exclude README.md
 	uv run pylint typing_protocol_intersection tests
 
 .PHONY: format
 format: ## Format code with ruff
-	uv run ruff format .
+	uv run ruff format . --exclude README.md
 
 .PHONY: all
 all: lint test ## Run lint and test
