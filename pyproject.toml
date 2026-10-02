@@ -39,8 +39,7 @@ dev = [
 ]
 
 [tool.hatch.build.targets.wheel]
-packages = ["."]
-include = ["**/*.py", "**/*.pyi", "**/py.typed"]
+packages = ["typing_protocol_intersection"]
 
 [tool.ruff]
 line-length = 120

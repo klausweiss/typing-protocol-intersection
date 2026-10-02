@@ -5,6 +5,7 @@
 - Add support for mypy==2.4.x.
 - Add support for python 3.15.
 - Remove support for python 3.10.
+- Change how the library is packaged (only bundle the python module).
 
 ## 0.6.6
 
