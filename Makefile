@@ -62,6 +62,10 @@ test-all: ## Run tests across all supported Python versions with mypy 1.5.0 and 
 	@$(MAKE) test-version PYTHON=3.14
 	@$(MAKE) test-version PYTHON=3.14t MYPY=1.5.0
 	@$(MAKE) test-version PYTHON=3.14t
+	@$(MAKE) test-version PYTHON=3.15 MYPY=1.5.0
+	@$(MAKE) test-version PYTHON=3.15
+	@$(MAKE) test-version PYTHON=3.15t MYPY=1.5.0
+	@$(MAKE) test-version PYTHON=3.15t
 
 .PHONY: lint
 lint: ## Run all linters (mypy, ruff check, ruff format --check, pylint)
