@@ -69,12 +69,12 @@ test-all: ## Run tests across all supported Python versions with mypy 1.5.0 and 
 lint: ## Run all linters (mypy, ruff check, ruff format --check, pylint)
 	uv run mypy typing_protocol_intersection
 	uv run ruff check .
-	uv run ruff format --check .
+	uv run ruff format --check . --exclude README.md
 	uv run pylint typing_protocol_intersection tests
 
 .PHONY: format
 format: ## Format code with ruff
-	uv run ruff format .
+	uv run ruff format . --exclude README.md
 
 .PHONY: all
 all: lint test ## Run lint and test
